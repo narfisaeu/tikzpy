@@ -2,7 +2,7 @@ import os, sys
 import cls_points
 import cls_shapes
 import cls_labels
-import cls_groups
+import cls_assembly
 import obj_data
 import subprocess
 
@@ -18,7 +18,7 @@ class pytikz(object):
         self.pto = cls_points._points(self)
         self.shp = cls_shapes._shapes(self)
         self.lbl = cls_labels._labels(self)
-        self.grp = cls_groups._groups(self)
+        self.asse = cls_assembly._assemblys(self)
         
         self.opt = obj_data._clsdata(type = None)
         
@@ -115,12 +115,22 @@ class pytikz(object):
             
             self._header_open(f, intex)
             
+            self._add_assemblies()
+            
             self._add_lines(f)
             
             self._close(f, intex)
             
         f.close()
     
+    def _add_assemblies(self):
+    
+        for key in self.asse.keys():
+            
+            asse = self.asse.getitem(key) 
+            
+            asse.draw_group_elements(asse, units = self.units)
+            
     def _add_lines(self, f):
         ### [str,self.group,self.zorder,self.id,self.comment]
         

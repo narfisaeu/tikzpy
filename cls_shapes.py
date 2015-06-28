@@ -148,6 +148,9 @@ class _shape(object):
             self.parent.shapes[self._key]["action"] = ""
             self.parent.shapes[self._key]["group"] = 0
             self.parent.shapes[self._key]["z-order"] = 0.
+            self.parent.shapes[self._key]["labels"] = []
+            self.parent.shapes[self._key]["group_label"] = None
+            
             self.parent.shapes[self._key]["comment"] = ""
             self.parent.shapes[self._key]["ptos"] = []
             self.parent.shapes[self._key]["arrow"] = ""
@@ -160,7 +163,8 @@ class _shape(object):
             self.parent.shapes[self._key]["text"] = ""
             self.parent.shapes[self._key]["position"] = ""
             self.parent.shapes[self._key]["align"] = ""
-            self.parent.shapes[self._key]["labels"] = []
+            self.parent.shapes[self._key]["textsize"] = ""
+            
     
     #############################################
     
@@ -419,8 +423,8 @@ class _shape(object):
             
             self.parent.shapes[self._key]["type"] = val2
         else:
-            self.parent.shapes[self._key]["type"] = val 
-            
+            self.parent.shapes[self._key]["type"] = val      
+        
     def line_color_options(self):
         lst = ["red" , "green" , "blue" , "cyan", "magenta" , "yellow" , "black" , "gray" , "darkgray" , "lightgray" , "brown" , "lime" , "olive" , "orange" , "pink" , "purple" , "teal" , "violet", "white"]
         return lst

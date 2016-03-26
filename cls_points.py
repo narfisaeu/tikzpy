@@ -200,7 +200,6 @@ class _point(object):
         return self.__class__
         
     def __str__(self):
-        
         return "Point key:%s x=%.4f y=%.4f z=%.4f layer=%i NumPoints:%i" % (self.id, self.x, self.y, self.z, self.layer,len(self.parent.points))
         
     ######################## Functions
@@ -237,7 +236,7 @@ class _point(object):
         if self._key is None:
             return self._lst[0]
         else:
-            return self.parent.points[self._key][0]
+            return float(self.parent.points[self._key][0])
 
     @x.setter
     def x(self, value):  
@@ -251,7 +250,7 @@ class _point(object):
         if self._key is None:
             return self._lst[1]
         else:
-            return self.parent.points[self._key][1]
+            return float(self.parent.points[self._key][1])
 
     @y.setter
     def y(self, value):        
@@ -265,7 +264,7 @@ class _point(object):
         if self._key is None:
             return self._lst[2]
         else:
-            return self.parent.points[self._key][2]
+            return float(self.parent.points[self._key][2])
 
     @z.setter
     def z(self, value):        

@@ -12,7 +12,22 @@ def log(txt):
     
 class pytikz(object):
    
-    def __init__(self):
+    """Python class to build your tikZ drawings
+       
+       :platform: Unix, Windows
+       :synopsis: Python class to build your tikZ drawings
+       :author: FLC 2012    
+       
+       :ivar dpi=300: property dpi of the drawing 
+       :ivar extension=".tikz.tex": extension property use to build TikZ drawings
+       :ivar description: drawing header description, by default "Created with pyTikZ"
+       :ivar unit="": general units use in TikZ drawing, no units by default
+       :ivar scale=1.: scale value of the TikZ drawing
+       :ivar scale_text=1.: scale value for the nodes text the TikZ drawing
+
+    """   
+   
+    def __init__(self):      
         
         ### Data
         self.pto = cls_points._points(self)
@@ -26,13 +41,33 @@ class pytikz(object):
         self.opt.units = ""
         self.opt.scale = 1.
         self.opt.scaletext = 1.
-        self.opt.description = "Created with pytikz" 
+        self.opt.description = "Created with pyTikZ" 
         self.opt.extension = ".tikz.tex"
         self.opt.dpi = 300
     
     ###########################
     
     def move_list_shapes(self, vector, lst):
+    
+        """
+        
+        .. _move_list_shapes:         
+                
+        **Synopsis:**
+            * Move a shape, assembly... object according a vector of movement
+        
+        **Args:**
+            * vector: spatial vector of movement
+            * lst: list of shapes, assemblies... object or a single object
+            
+        **Returns:**
+            * None
+            
+        .. note::
+        
+            * See example
+        
+        """     
     
         for shp in lst:
             
@@ -64,7 +99,72 @@ class pytikz(object):
     
     ###########################    
     
+    def save_eps(self, path, name):
+    
+        """
+        
+        .. _save_eps:         
+                
+        **Synopsis:**
+            * Save TikZ drawing as a eps file for visualization purposes
+            * File is save with .tikz.eps extension
+            
+        **Args:**
+            * path: path to directory where the pdef files will be save
+            * name: name of the eps file to be save
+            
+        **Returns:**
+            * route: the complete path to the eps file
+            
+        .. note::
+            
+            * Dependent on the local latex instalation, use latex to dvi and dvips to eps
+            * See example
+        
+        """  
+        
+        ### Default extension .tikz.tex
+        #route_png = os.path.join(path, name + ".png")
+        route_dvi = os.path.join(path, name + ".tikz.dvi")
+        route_eps = os.path.join(path, name + ".tikz.eps")
+        route_tik = os.path.join(path, name + self.extension)
+        
+        self._write_tikz(route_tik, True)
+        
+        ### Convert  
+        lst = ["latex", route_tik]
+        p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+        out, err = p.communicate()
+        
+        lst = ["dvips", "-o", route_eps, route_dvi]
+        p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+        out, err = p.communicate()        
+                
+        return route_eps    
+    
     def save_pdf(self, path, name):
+    
+        """
+        
+        .. _save_pdf:         
+                
+        **Synopsis:**
+            * Save TikZ drawing as a pdf file for visualization purposes
+            * File is save with .tikz.pdf extension
+            
+        **Args:**
+            * path: path to directory where the pdef files will be save
+            * name: name of the pdf file to be save
+            
+        **Returns:**
+            * route_pdf: the complete path to the pdf file
+            
+        .. note::
+            
+            * Dependent on the local latex instalation, use pdflatex to pdf
+            * See example
+        
+        """  
         
         ### Default extension .tikz.tex
         #route_png = os.path.join(path, name + ".png")
@@ -74,38 +174,71 @@ class pytikz(object):
         self._write_tikz(route_tik, True)
         
         ### Convert  
-        """
-        lst = ["cd",path]
-        p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
-        out, err = p.communicate()
-        log(out)        
-        """
         lst = ["pdflatex", route_tik]
         p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
         out, err = p.communicate()
-        #log(out)
-        """
-        lst = ["convert","-density","%i" % self.dpi,route_pdf,route_png]
-        p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
-        out, err = p.communicate()
-        log(out)         
-        """
-        
+                
         return route_pdf
         
     def save_tikz_stanalone(self, path, name):
+    
+        """
+        
+        .. _save_tikz_stanalone:         
+                
+        **Synopsis:**
+            * Save TikZ drawing as a TikZ file, including the necessary headers
+            * File is save with .tikz.tex extension
+            
+        **Args:**
+            * path: path to directory where the pdef files will be save
+            * name: name of the pdf file to be save
+            
+        **Returns:**
+            * route: the complete path to the output file
+            
+        .. note::
+        
+            * See example
+        
+        """     
         
         ### Default extension .tikz.tex
         route = os.path.join(path, name + self.extension)
         
         self._write_tikz(route, True)
         
+        return route
+        
     def save_tikz(self, path, name):
+    
+        """
+        
+        .. _save_tikz:         
+                
+        **Synopsis:**
+            * Save TikZ drawing as a TikZ file, without the headers, ready to be embedded in latex
+            * File is save with .tikz.tex extension
+            
+        **Args:**
+            * path: path to directory where the pdef files will be save
+            * name: name of the pdf file to be save
+            
+        **Returns:**
+            * route: the complete path to the output file
+            
+        .. note::
+        
+            * See example
+        
+        """     
         
         ### Default extension .tikz.tex
         route = os.path.join(path, name + self.extension)
         
         self._write_tikz(route)
+        
+        return route
         
     ###########################
     
@@ -124,11 +257,11 @@ class pytikz(object):
         f.close()
     
     def _add_assemblies(self):
-    
+        
         for key in self.asse.keys():
-            
-            asse = self.asse.getitem(key) 
-            
+                       
+            asse = self.asse.getitem(key)            
+                        
             asse.draw_group_elements(asse, units = self.units)
             
     def _add_lines(self, f):

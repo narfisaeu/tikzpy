@@ -86,6 +86,9 @@ def lines():
     tik.save_pdf(path, "test")
     #tik.save_tikz_stanalone(path, "test")
     
+def labels():
+    
+    pass
     
 if __name__ == "__main__":
 

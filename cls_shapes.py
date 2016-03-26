@@ -72,6 +72,15 @@ class _shapes(object):
         
         return item
         
+    def parabola(self, pto1, ptobend, pto2, group = 0):
+        
+        item = self._additem("parabola", group = group)          
+        item.addpto = pto1
+        item.addpto = ptobend
+        item.addpto = pto2
+        
+        return item        
+        
     def _additem(self, type, group = 0):
         
         # Create auto new
@@ -164,6 +173,7 @@ class _shape(object):
             self.parent.shapes[self._key]["position"] = ""
             self.parent.shapes[self._key]["align"] = ""
             self.parent.shapes[self._key]["textsize"] = ""
+            self.parent.shapes[self._key]["rotate_text"] = 0.
             
     
     #############################################
@@ -202,7 +212,7 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self.color + " ,"
-            if self.fill != "": opt += self.fill + " ,"
+            if self.fill != "": opt += " fill= " + self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -241,7 +251,7 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self.color + " ,"
-            if self.fill != "": opt += self.fill + " ,"
+            if self.fill != "": opt += " fill= " + self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -253,7 +263,7 @@ class _shape(object):
             else:
                 log("Less than two point for the rectangle %s" % self.id)            
             
-            str = r"\draw %s %s;" % (opt, ptos)      
+            str = r"\draw %s %s;" % (opt, ptos)   
         
         if self.action == "circle":
             
@@ -262,18 +272,18 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self.color + " ,"
-            if self.fill != "": opt += self.fill + " ,"
+            if self.fill != "": opt += " fill= " + self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
             if len(self.addpto) > 0:
                 pto = self.addpto[0]
-                ptos = "(%.4f%s,%.4f%s,%.4f%s) circle [radius=%.4f%s]" % (pto.x, units, pto.y, units, pto.z, units, self.radius, units)
+                ptos = "(%.4f%s,%.4f%s,%.4f%s) circle [radius=%.4f%s]" % (pto.x, units, pto.y, units, pto.z, units, float(self.radius), units)
             else:
                 log("Less than one point for the circle %s" % self.id)   
 
             str = r"\draw %s %s;" % (opt, ptos)   
-
+            
         if self.action == "grid":
 
             opt = ""
@@ -308,7 +318,8 @@ class _shape(object):
             #if self.fill != "": opt += self.fill + " ,"            
             if self.fill != "": opt += self.fill + " ,"   
             if self.position != "": opt += self.position + " ,"   
-            if self.align != "": opt += "align=" + self.align + " ,"               
+            if self.align != "": opt += "align=" + self.align + " ,"            
+            if self.rotate_text != 0.:  opt += "rotate=%.3f" %  self.rotate_text+ " ,"               
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -321,6 +332,34 @@ class _shape(object):
                 log("Less than one point for the node %s" % self.id)            
             
             str = r"\node %s at %s {%s};" % (opt, ptos,self.text)             
+                
+        if self.action == "parabola":
+            
+            opt = ""
+            if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
+            if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
+            if self.type != "": opt += self.type.replace("##units##",units) + " ,"
+            if self.color != "": opt += self.color + " ,"
+            if self.fill != "": opt += self.fill + " ,"
+            if len(opt) > 0: opt = "[" + opt[:-2] + "] "
+            
+            ptos = ""
+            if len(self.addpto) == 3:
+                
+                pto = self.addpto[0]
+                ptos += "(%.4f%s,%.4f%s,%.4f%s) parabola " % (pto.x, units, pto.y, units, pto.z, units)
+                
+                pto = self.addpto[1]
+                ptos += " bend (%.4f%s,%.4f%s,%.4f%s) " % (pto.x, units, pto.y, units, pto.z, units)
+                
+                pto = self.addpto[2]
+                ptos += "(%.4f%s,%.4f%s,%.4f%s)" % (pto.x, units, pto.y, units, pto.z, units)                              
+                
+            else:
+                log("Only three points allowed in the parabla %s" % self.id)
+            
+            str = r"\draw%s %s;" % (opt,ptos)       
+        
             
         return str
     
@@ -380,6 +419,8 @@ class _shape(object):
         val = str(value).lower().strip()
         if val in lst:
             self.parent.shapes[self._key]["thick"] = val
+        elif val == "":
+            pass
         else:
             self.parent.shapes[self._key]["thick"] = "line width = %.4f##units##" % float(val)
 
@@ -447,7 +488,7 @@ class _shape(object):
 
     @property
     def fill(self):
-        # name, black!30%, green!20!white
+        # name, black!30, green!20!white
         # 
         return self.parent.shapes[self._key]["fill"]
     
@@ -508,8 +549,10 @@ class _shape(object):
                     self.parent.shapes[self._key]["labels"].append(value)
                 return True
             else:
-                #log("The label %s has not been previously declared" % value)
-                return False
+                self.parent.addlabel = value
+                if not value in self.parent.shapes[self._key]["labels"]:
+                    self.parent.shapes[self._key]["labels"].append(value)
+                return True
             
     def dellabel(self, value):
         if value in self.parent.labels:
@@ -534,11 +577,11 @@ class _shape(object):
 
     @property
     def radius(self):
-        return self.parent.shapes[self._key]["radius"]
+        return float(self.parent.shapes[self._key]["radius"])
         
     @radius.setter
     def radius(self, value):
-        self.parent.shapes[self._key]["radius"] = str(value)   
+        self.parent.shapes[self._key]["radius"] = float(value)   
 
     @property
     def step(self):
@@ -557,6 +600,15 @@ class _shape(object):
     @text.setter
     def text(self, value):
         self.parent.shapes[self._key]["text"] = str(value)
+        
+    @property
+    def rotate_text(self):
+        return self.parent.shapes[self._key]["rotate_text"]
+        
+    @rotate_text.setter
+    def rotate_text(self, value):
+        ### float number in degrees
+        self.parent.shapes[self._key]["rotate_text"] = float(value)        
 
     def positions_options(self):
         lst = ["above" , "below" , "left" , "right", "above left" , "below left" , "above right" , "below right"]

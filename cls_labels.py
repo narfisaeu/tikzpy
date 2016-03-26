@@ -49,6 +49,13 @@ class _labels(object):
                     pass
     
     ################    
+    def __getitem__(self, name):
+                
+        if name in self._labels:
+            return self.__labels[name]
+        else:
+            return None  
+    
     @property
     def _labels(self):
         return self.__labels.keys()

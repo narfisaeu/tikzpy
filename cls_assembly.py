@@ -34,7 +34,6 @@ class _assemblys(object):
         
         ### Give a point
         _key = str(key)
-        
         if self.assemblys[_key]:
             return _assembly(self,_key, self.assemblys[_key]["action"])
         else:
@@ -120,21 +119,45 @@ class _assembly(object):
         self.parent = parent
         self._key = key
         self._draw = False
-                
-        if not self.parent.assemblys[key]:
         
+        if not self.parent.assemblys[key]:
+            
             self.parent.assemblys[self._key]["action"] = ""
             self.parent.assemblys[self._key]["group"] = 0
             self.parent.assemblys[self._key]["z-order"] = 0.
             self.parent.assemblys[self._key]["labels"] = []
             self.parent.assemblys[self._key]["group_label"] = ""
             self.parent.assemblys[self._key]["mpto"] = None
-                 
+            
         if type == "racime":
             self._handler = asse_rac._racime(self.parent)
         else:
             raise Error            
-            
+        
+        #Setter and getter properties dynamically add
+        for ele in self._handler.lst_data:
+            self.addProperty(ele)        
+        
+    def addProperty(self, attribute):
+        # create local setter and getter with a particular attribute name 
+        getter = lambda self: self._getProperty(attribute)
+        setter = lambda self, value: self._setProperty(attribute, value)
+
+        # construct property attribute and add it to the class
+        setattr(self.__class__, attribute, property(fget=getter, \
+                                                    fset=setter, \
+                                                    doc="Auto-generated method"))
+                                                    
+    def _setProperty(self, attribute, value):
+        #print "Setting: %s = %s" %(attribute, value)
+        #self.parent.assemblys[self._key][attribute] = value
+        self._handler.set_property(attribute, value, self._key)
+        
+    def _getProperty(self, attribute):
+        #print "Getting: %s" %attribute
+        #return self.parent.assemblys[self._key][attribute]
+        return self._handler.get_property(attribute, self._key)
+        
     #############################################
     
     def copy(self):
@@ -148,13 +171,12 @@ class _assembly(object):
             self.parent.assemblys[shp.id][key] = copy.deepcopy(self.parent.assemblys[self.id][key])
            
     def move(self, mpto):
-        
-        ### To change
-        self.parent.assemblys[self._key]["mpto"] = mpto
+        ### Move function
+        self.parent.assemblys[self._key]["mpto"] = mpto.copy()
     
     def draw_group_elements(self, asse, units = ""):
         
-        shps = self._handler.draw_group_elements(units)
+        shps = self._handler.draw_group_elements(units, asse)
         if type(shps) != type([]):
             log("Error draw_group_elements function definition")
         
@@ -182,10 +204,22 @@ class _assembly(object):
             self.parent.parent.add_label_to_list_shapes(shps, lbl)           
         
     #############################################
-    def add_element(self, text, thickness = None, separation = None):
+    
+    def add_element(self, text, thickness = "thin", separation = None):
                 
         self.parent.assemblys[self._key]["element"].append([text, thickness, separation])
     
+    '''
+    @property
+    def l1(self):
+    
+        return self.parent.assemblys[self._key]["l1"]
+        
+    @l1.setter
+    def l1(self, value):
+        
+        self.parent.assemblys[self._key]["l1"] = value   
+    '''
     #############################################
     
     @property
@@ -232,6 +266,7 @@ class _assembly(object):
         
     @addlabel.setter
     def addlabel(self, value):
+        
         if type(value) is type([]):
             for val in value:
                 self.addlabel = val
@@ -241,7 +276,7 @@ class _assembly(object):
                     self.parent.assemblys[self._key]["labels"].append(value)
                 return True
             else:
-                self.parent.addvalue = value
+                self.parent.addlabel = value
                 if not value in self.parent.assemblys[self._key]["labels"]:
                     self.parent.assemblys[self._key]["labels"].append(value)
                 return True

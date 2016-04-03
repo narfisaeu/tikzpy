@@ -1,6 +1,6 @@
 import math
 import numbers
-import obj_data
+import pyTikZ.obj_data
 import copy
 
 def log(txt):

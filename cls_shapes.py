@@ -1,3 +1,6 @@
+#!/usr/bin/python 
+# FLC 2013
+
 import math
 import numbers
 import obj_data
@@ -9,8 +12,33 @@ def log(txt):
 
 class _shapes(object):
 
-    def __init__(self, parent):
+    """**Shapes class:** 
     
+    .. _shapes_cls:
+   
+    :platform: Unix, Windows
+    :synopsis: Allows to add 2D shapes using points
+    
+    :properties:
+        * Possible shapes
+            * Line between two points. See :ref:`shp.line <shapes_line>`
+            * Path of multiple points. See :ref:`shp.path <shapes_path>`
+            * Rectangle given by two corners
+            * Circle given by center and radius
+            * Arc given by starting point, radius and angles
+            * Grid rectangle
+            * Text frame
+            * Parabola given by three points
+        * Shapes allow to set labels (see labels section)
+    
+    **Chracteristics of a shape (shp) object**
+    
+        * Each shape object has different properties depending on the nature of the shape
+    
+    """
+
+    def __init__(self, parent):
+        
         self.parent = parent
         
         ### Counters
@@ -38,50 +66,109 @@ class _shapes(object):
         else:
             return None            
 
-    def line(self, group = 0):
+    def line(self, p1, p2, layer = 0, thick = "", type = "", color = "", fill = ""):
+        """
+        .. _shapes_line:         
+                
+        **Synopsis:**
+            * Add a line shape or segment between two points
         
-        return self._additem("line", group = group)
+        **Args:**
+            * p1: segment start point 
+            * p2: segment end point
+            
+        **Optional parameters:**
+            * layer = 0: layer member where the shape belongs
+            * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+            * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
+            * color = "": color of the line (see colors examples)
+            * fill = "": fill texture of the line (see fill examples)
+            
+        **Returns:**
+            * A line shape object
+           
+        **Chracteristics of a shape line object**
         
-    def path(self, group = 0):
+        :ivar id: get unique id of the point
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane
+        :ivar labels: get labels to which the shape belongs
+        :ivar addlabel: set/get add a label to the shape
+        :ivar comment: multifunctional text field
         
-        return self._additem("path", group = group)    
+        :ivar arrow: set/get arrow parameters (see arrows examples)
+        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+        :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
+        :ivar color: set/get color of the line (see colors examples)
+        :ivar fill: set/get fill texture of the line (see fill examples)       
+           
+        .. note::
+        
+            * See example of lines 
+        
+        """     
+        
+        item = self._additem("line", layer = layer)
+        item.addpto = p1
+        item.addpto = p2
+        if thick != "": item.thick = thick
+        if type != "":  item.type = type
+        if color != "": item.color = color
+        if fill != "": item.fill = fill
+        return item       
+        
+    def path(self, layer = 0):
+        
+        return self._additem("path", layer = layer)    
 
-    def rectangle(self, group = 0):
+    def rectangle(self, layer = 0):
         
-        return self._additem("rectangle", group = group)   
+        return self._additem("rectangle", layer = layer)   
 
-    def circle(self, radius, group = 0):
+    def circle(self, radius, layer = 0):
         
-        item = self._additem("circle", group = group)          
+        item = self._additem("circle", layer = layer)          
         item.radius = float(radius)
         
         return item
         
-    def grid(self, step, xstep = 0, ystep = 0, group = 0):
+    def arc(self, start_point, radius, start_angle, end_angle, layer = 0):
         
-        item = self._additem("grid", group = group)          
+        # Angles in degrees
+        item = self._additem("arc", layer = layer)          
+        item.radius = float(radius)
+        item.start_angle = float(start_angle)
+        item.end_angle = float(end_angle)
+        item.addpto = start_point
+        
+        return item        
+        
+    def grid(self, step, xstep = 0, ystep = 0, layer = 0):
+        
+        item = self._additem("grid", layer = layer)          
         item.step = [step, xstep, ystep]
         
         return item
         
-    def text(self, pto, text, group = 0):
+    def text(self, pto, text, layer = 0):
         
-        item = self._additem("text", group = group)          
+        item = self._additem("text", layer = layer)          
         item.text = text
         item.addpto = pto
         
-        return item
+        return item  
+    
+    def parabola(self, pto1, ptobend, pto2, layer = 0):
         
-    def parabola(self, pto1, ptobend, pto2, group = 0):
-        
-        item = self._additem("parabola", group = group)          
+        item = self._additem("parabola", layer = layer)          
         item.addpto = pto1
         item.addpto = ptobend
         item.addpto = pto2
         
         return item        
         
-    def _additem(self, type, group = 0):
+    def _additem(self, type, layer = 0):
         
         # Create auto new
         _key =  "#%i" % self.counters["shapes"]
@@ -89,7 +176,7 @@ class _shapes(object):
         self.shapes[_key] = {}
         
         lline = _shape(self,_key)
-        lline.group = group
+        lline.layer = layer
         lline.action = type
         lline.addlabel = "default"
         return lline
@@ -155,7 +242,7 @@ class _shape(object):
         if not self.parent.shapes[key]:
         
             self.parent.shapes[self._key]["action"] = ""
-            self.parent.shapes[self._key]["group"] = 0
+            self.parent.shapes[self._key]["layer"] = 0
             self.parent.shapes[self._key]["z-order"] = 0.
             self.parent.shapes[self._key]["labels"] = []
             self.parent.shapes[self._key]["group_label"] = None
@@ -168,6 +255,8 @@ class _shape(object):
             self.parent.shapes[self._key]["color"] = ""
             self.parent.shapes[self._key]["fill"] = ""
             self.parent.shapes[self._key]["radius"] = 1.
+            self.parent.shapes[self._key]["start_angle"] = 0.
+            self.parent.shapes[self._key]["end_angle"] = 90.
             self.parent.shapes[self._key]["step"] = []
             self.parent.shapes[self._key]["text"] = ""
             self.parent.shapes[self._key]["position"] = ""
@@ -180,7 +269,7 @@ class _shape(object):
     
     def copy(self):
             
-        shp = self.parent._additem(self.action, group = self.group)
+        shp = self.parent._additem(self.action, layer = self.layer)
         
         for key in self.parent.shapes[self.id].keys():
             
@@ -282,7 +371,27 @@ class _shape(object):
             else:
                 log("Less than one point for the circle %s" % self.id)   
 
-            str = r"\draw %s %s;" % (opt, ptos)   
+            str = r"\draw %s %s;" % (opt, ptos)  
+
+        if self.action == "arc":
+            
+            opt = ""
+            #if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
+            if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
+            if self.type != "": opt += self.type.replace("##units##",units) + " ,"
+            if self.color != "": opt += self.color + " ,"
+            if self.fill != "": opt += " fill= " + self.fill + " ,"
+            if len(opt) > 0: opt = "[" + opt[:-2] + "] "
+            
+            ptos = ""
+            if len(self.addpto) > 0:
+                pto = self.addpto[0]
+                ptos = "(%.4f%s,%.4f%s,%.4f%s) arc [radius=%.4f%s, start angle=%.4f%s, end angle=%.4f%s]" % \
+                (pto.x, units, pto.y, units, pto.z, units, float(self.radius), units, float(self.start_angle), units, float(self.end_angle), units)
+            else:
+                log("Less than one point for the arc %s" % self.id)   
+
+            str = r"\draw %s %s;" % (opt, ptos)
             
         if self.action == "grid":
 
@@ -364,7 +473,35 @@ class _shape(object):
         return str
     
     #############################################
+    """
+    id
+    addpto
     
+    arrow
+    arrow_build(self, start, end, scale)
+    
+    thick
+    type
+    color
+    fill
+
+    radius
+    start_angle
+    end_angle
+    step
+
+    text
+    rotate_text
+    position
+    align
+
+    action
+    layer
+    zorder
+    labels
+    addlabel
+    comment    
+    """
     @property
     def id(self):
         return self._key      
@@ -426,6 +563,8 @@ class _shape(object):
 
     def line_type_options(self):
         lst = ["solid", "dashed" , "dotted" , "dashdotted" , "dashdotdotted"]
+        lst = lst + ["densely dashed" , "densely dotted" , "densely dashdotted" , "densely dashdotdotted"]
+        lst = lst + ["loosely dashed" , "loosely dotted" , "loosely dashdotted" , "loosely dashdotdotted"]
         lst2 = ["zigzag", "random", "saw", "snake"]
         return lst, lst2    
             
@@ -472,7 +611,7 @@ class _shape(object):
         
     @property
     def color(self):
-        # name, black!30, green!20!white
+        # name, black!30, green!20!white , custom defined in colors
         # 
         return self.parent.shapes[self._key]["color"]
     
@@ -511,12 +650,12 @@ class _shape(object):
         self.parent.shapes[self._key]["action"] = value
     
     @property
-    def group(self):
-        return self.parent.shapes[self._key]["group"]
+    def layer(self):
+        return self.parent.shapes[self._key]["layer"]
         
-    @group.setter
-    def group(self, value):
-        self.parent.shapes[self._key]["group"] = int(value)
+    @layer.setter
+    def layer(self, value):
+        self.parent.shapes[self._key]["layer"] = float(value)
         
     @property
     def zorder(self):
@@ -582,6 +721,22 @@ class _shape(object):
     @radius.setter
     def radius(self, value):
         self.parent.shapes[self._key]["radius"] = float(value)   
+        
+    @property
+    def start_angle(self):
+        return float(self.parent.shapes[self._key]["start_angle"])
+        
+    @start_angle.setter
+    def start_angle(self, value):
+        self.parent.shapes[self._key]["start_angle"] = float(value)  
+
+    @property
+    def end_angle(self):
+        return float(self.parent.shapes[self._key]["end_angle"])
+        
+    @end_angle.setter
+    def end_angle(self, value):
+        self.parent.shapes[self._key]["end_angle"] = float(value)        
 
     @property
     def step(self):
@@ -649,6 +804,6 @@ class _shape(object):
         
     def __str__(self):
         
-        return "Line key:%s group=%i points=%i NumLines:%i" % (self.id, self.group, len(self.addpto), len(self.parent.shapes))                
+        return "Line key:%s layer=%i points=%i NumLines:%i" % (self.id, self.layer, len(self.addpto), len(self.parent.shapes))                
         
         

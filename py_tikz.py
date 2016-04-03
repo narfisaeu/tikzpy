@@ -1,3 +1,6 @@
+#!/usr/bin/python 
+# FLC 2013
+
 import os, sys
 import cls_points
 import cls_shapes
@@ -5,20 +8,24 @@ import cls_labels
 import cls_assembly
 import obj_data
 import subprocess
+import files_crawl as libfile
 
 def log(txt):
     
     print txt
+    
+def load():
+
+    return pytikz()
     
 class pytikz(object):
    
     """Python class to build your tikZ drawings
        
        :platform: Unix, Windows
-       :synopsis: Python class to build your tikZ drawings
-       :author: FLC 2012    
+       :synopsis: Python class to build your tikZ drawings 
        
-       :ivar dpi=300: property dpi of the drawing 
+       :ivar dpi=300: dots per inch property of the drawings 
        :ivar extension=".tikz.tex": extension property use to build TikZ drawings
        :ivar description: drawing header description, by default "Created with pyTikZ"
        :ivar unit="": general units use in TikZ drawing, no units by default
@@ -142,7 +149,7 @@ class pytikz(object):
                 
         return route_eps    
     
-    def save_pdf(self, path, name):
+    def save_pdf(self, path, name, as_png = True):
     
         """
         
@@ -155,6 +162,9 @@ class pytikz(object):
         **Args:**
             * path: path to directory where the pdef files will be save
             * name: name of the pdf file to be save
+            
+        **Optional parameters:**           
+            * as_png = True: convert the pdf to a png file
             
         **Returns:**
             * route_pdf: the complete path to the pdf file
@@ -169,6 +179,7 @@ class pytikz(object):
         ### Default extension .tikz.tex
         #route_png = os.path.join(path, name + ".png")
         route_pdf = os.path.join(path, name + ".tikz.pdf")
+        route_png = os.path.join(path, name + ".tikz.png")
         route_tik = os.path.join(path, name + self.extension)
         
         self._write_tikz(route_tik, True)
@@ -177,6 +188,12 @@ class pytikz(object):
         lst = ["pdflatex", route_tik]
         p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
         out, err = p.communicate()
+        
+        ### Create png
+        if as_png:
+            lst = ["convert", "-density", "1000", route_pdf, "-quality", "100",route_png]
+            p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+            out, err = p.communicate()        
                 
         return route_pdf
         
@@ -192,7 +209,7 @@ class pytikz(object):
             
         **Args:**
             * path: path to directory where the pdef files will be save
-            * name: name of the pdf file to be save
+            * name: name of the tikz format file to be save
             
         **Returns:**
             * route: the complete path to the output file
@@ -222,7 +239,7 @@ class pytikz(object):
             
         **Args:**
             * path: path to directory where the pdef files will be save
-            * name: name of the pdf file to be save
+            * name: name of the tikz format file to be save
             
         **Returns:**
             * route: the complete path to the output file
@@ -409,4 +426,13 @@ class pytikz(object):
     @scale_text.setter
     def scale_text(self, value):
         self.opt.scaletext = value
+        
+    ###########################
+    def log(self, txt, ref = ""):
+        print txt
+        
+    def error(self, txt, ref = ""):
+        raise ValueError(ref + "--" + txt)
+       
+    
         

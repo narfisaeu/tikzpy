@@ -36,7 +36,13 @@ class _shapes(object):
         * Each shape object has different properties depending on the nature of the shape
     
     """
-
+    
+    """
+        For the furture:
+            * Add mapbits, images
+            * Translate and rotation
+    """
+    
     def __init__(self, parent):
         
         self.parent = parent
@@ -74,14 +80,14 @@ class _shapes(object):
             * Add a line shape or segment between two points
         
         **Args:**
-            * p1: segment start point 
-            * p2: segment end point
+            * p1: segment start point (given by id, alias or point object)
+            * p2: segment end point (given by id, alias or point object)
             
         **Optional parameters:**
             * layer = 0: layer member where the shape belongs
             * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
             * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
-            * color = "": color of the line (see colors examples)
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
             * fill = "": fill texture of the line (see fill examples)
             
         **Returns:**
@@ -91,7 +97,7 @@ class _shapes(object):
         
         :ivar id: get unique id of the point
         :ivar action: get type of shape object
-        :ivar zorder: set/get z position respect the drawing plane
+        :ivar zorder: set/get z position respect the drawing plane and viewer
         :ivar labels: get labels to which the shape belongs
         :ivar addlabel: set/get add a label to the shape
         :ivar comment: multifunctional text field
@@ -100,8 +106,10 @@ class _shapes(object):
         :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
-        :ivar color: set/get color of the line (see colors examples)
-        :ivar fill: set/get fill texture of the line (see fill examples)       
+        :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
+        :ivar fill: set/get fill texture of the line (see fill examples)  
+        
+        :ivar addpto: set or add a new points to the line. Get a list of points that form the line. See :ref:`addpto examples <ex_shapes_addpto>`
            
         .. note::
         
@@ -118,22 +126,159 @@ class _shapes(object):
         if fill != "": item.fill = fill
         return item       
         
-    def path(self, layer = 0):
+    def path(self, ptos, layer = 0, thick = "", type = "", color = "", fill = ""):
+        """
+        .. _shapes_path:         
+                
+        **Synopsis:**
+            * Add a path of multiple points connected by a line
         
-        return self._additem("path", layer = layer)    
+        **Args:**
+            * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            
+        **Optional parameters:**
+            * layer = 0: layer member where the shape belongs
+            * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+            * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
+            * fill = "": fill texture of the line (see fill examples)
+            
+        **Returns:**
+            * A path shape object
+           
+        **Chracteristics of a shape line object**
+        
+        :ivar id: get unique id of the point
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane and viewer
+        :ivar labels: get labels to which the shape belongs
+        :ivar addlabel: set/get add a label to the shape
+        :ivar comment: multifunctional text field
+        
+        :ivar arrow: set/get arrow parameters (see arrows examples)
+        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+        :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
+        :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
+        :ivar fill: set/get fill texture of the line (see fill examples)       
+        
+        :ivar addpto: set or add a new points to the line. Get a list of points that form the line. See :ref:`addpto examples <ex_shapes_addpto>`
+        
+        .. note::
+        
+            * See example of paths 
+        
+        """    
+        
+        item = self._additem("path", layer = layer)
+        item.addpto = ptos
+        if thick != "": item.thick = thick
+        if type != "":  item.type = type
+        if color != "": item.color = color
+        if fill != "": item.fill = fill
+        return item  
 
     def rectangle(self, layer = 0):
         
         return self._additem("rectangle", layer = layer)   
 
-    def circle(self, radius, layer = 0):
+    def circle(self, pto, radius, layer = 0, thick = "", type = "", color = "", fill = ""):       
+        """
+        .. _shapes_circle:         
+                
+        **Synopsis:**
+            * Add a circle defined by the centre and the radius
+        
+        **Args:**
+            * pto: point of the centre of the circle (given by id, alias or point object)
+            * radius: radius of the circle
+            
+        **Optional parameters:**
+            * layer = 0: layer member where the shape belongs
+            * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+            * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
+            * fill = "": fill texture of the line (see fill examples)
+            
+        **Returns:**
+            * A circle shape object
+           
+        **Chracteristics of a shape circle object**
+        
+        :ivar id: get unique id of the point
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane and viewer
+        :ivar labels: get labels to which the shape belongs
+        :ivar addlabel: set/get add a label to the shape
+        :ivar comment: multifunctional text field
+        
+        :ivar arrow: set/get arrow parameters (see arrows examples)
+        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+        :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
+        :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
+        :ivar fill: set/get fill texture of the line (see fill examples)       
+                
+        .. note::
+        
+            * See example of circles 
+        
+        """        
         
         item = self._additem("circle", layer = layer)          
         item.radius = float(radius)
+        item.addpto = pto
+        if thick != "": item.thick = thick
+        if type != "":  item.type = type
+        if color != "": item.color = color
+        if fill != "": item.fill = fill        
         
         return item
         
-    def arc(self, start_point, radius, start_angle, end_angle, layer = 0):
+    def arc(self, start_point, radius, start_angle, end_angle, layer = 0, thick = "", type = "", color = "", fill = ""):
+        """
+        .. _shapes_arc:         
+                
+        **Synopsis:**
+            * Add an arc defined by the starting point, radius, start angle and end angle
+        
+        **Args:**
+            * start_point: starting point of the arc (given by id, alias or point object)
+            * radius: radius of the arc
+            * start_angle: start angle in degrees
+            * end_angle: end angle in degrees
+            
+        **Optional parameters:**
+            * layer = 0: layer member where the shape belongs
+            * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+            * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
+            * fill = "": fill texture of the line (see fill examples)
+            
+        **Returns:**
+            * An arc shape object
+           
+        **Chracteristics of a shape arc object**
+        
+        :ivar id: get unique id of the point
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane and viewer
+        :ivar labels: get labels to which the shape belongs
+        :ivar addlabel: set/get add a label to the shape
+        :ivar comment: multifunctional text field
+        
+        :ivar arrow: set/get arrow parameters (see arrows examples)
+        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+        :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
+        :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
+        :ivar fill: set/get fill texture of the line (see fill examples)       
+                
+        .. note::
+        
+            * See example of arcs
+        
+        """         
         
         # Angles in degrees
         item = self._additem("arc", layer = layer)          
@@ -294,13 +439,13 @@ class _shape(object):
         
         str = ""
         
-        if self.action == "line":
+        if self.action == "line" or self.action == "path":
             
             opt = ""
             if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
-            if self.color != "": opt += self.color + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
             if self.fill != "": opt += " fill= " + self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
@@ -315,23 +460,7 @@ class _shape(object):
             
             
             str = r"\draw %s %s;" % (opt, ptos)
-            
-        if self.action == "path":
-            
-            opt = ""
-            if self.fill != "": opt += self.fill + " ,"
-            if len(opt) > 0: opt = "[" + opt[:-2] + "] "
-            
-            ptos = ""
-            if len(self.addpto) >= 2:
-                for ii in range(0,2):
-                    pto = self.addpto[ii]
-                    ptos += "(%.4f%s,%.4f%s,%.4f%s) rectangle " % (pto.x, units, pto.y, units, pto.z, units)
-                if len(ptos) > 0: ptos = ptos[:-11]
-            else:
-                log("Less than two point for the path %s" % self.id)                
-            
-            str = r"\path %s %s;" % (opt, ptos)
+            #str = r"\path %s %s;" % (opt, ptos) ### Invisible lines, intersection
             
         if self.action == "rectangle":
 
@@ -339,7 +468,7 @@ class _shape(object):
             #if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
-            if self.color != "": opt += self.color + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
             if self.fill != "": opt += " fill= " + self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
@@ -360,7 +489,7 @@ class _shape(object):
             #if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
-            if self.color != "": opt += self.color + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
             if self.fill != "": opt += " fill= " + self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
@@ -376,10 +505,10 @@ class _shape(object):
         if self.action == "arc":
             
             opt = ""
-            #if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
+            if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
-            if self.color != "": opt += self.color + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
             if self.fill != "": opt += " fill= " + self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
@@ -399,7 +528,7 @@ class _shape(object):
             #if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
-            if self.color != "": opt += self.color + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
             if self.fill != "": opt += self.fill + " ,"
             if self.step[2] != 0: opt += "ystep=%.4f ," % self.step[2]
             if self.step[1] != 0: opt += "xstep=%.4f ," % self.step[1]
@@ -423,7 +552,7 @@ class _shape(object):
             #if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
             #if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             #if self.type != "": opt += self.type.replace("##units##",units) + " ,"
-            if self.color != "": opt += self.color + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
             #if self.fill != "": opt += self.fill + " ,"            
             if self.fill != "": opt += self.fill + " ,"   
             if self.position != "": opt += self.position + " ,"   
@@ -448,7 +577,7 @@ class _shape(object):
             if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
-            if self.color != "": opt += self.color + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
             if self.fill != "": opt += self.fill + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
@@ -512,8 +641,18 @@ class _shape(object):
     
     @addpto.setter
     def addpto(self, value):
-        self.parent.shapes[self._key]["ptos"].append(value)
-
+        ### Can be set as a point, a list o points, an alias, a list of alias or 
+        ### a list of alias and points objects. Also id of points can be used.
+        
+        ### Add points
+        if type(value) is type([]):       
+            for v in value:
+                _pto = self.parent.parent.pto._choices(v)
+                self.parent.shapes[self._key]["ptos"].append(_pto)
+        else:
+            _pto = self.parent.parent.pto._choices(value)
+            self.parent.shapes[self._key]["ptos"].append(_pto)
+    
     @property
     def arrow(self):
         # \usetikzlibrary{arrows}
@@ -611,19 +750,16 @@ class _shape(object):
         
     @property
     def color(self):
-        # name, black!30, green!20!white , custom defined in colors
-        # 
+        # name, black!30, green!20!white, 255_255_255, 255_255_255_0, custom defined in colors
         return self.parent.shapes[self._key]["color"]
     
+    def _color_build(self):
+        return self.parent.parent.col[self.color]
+        
     @color.setter
     def color(self, value):
-        lst = self.line_color_options()
-        val = str(value).lower().strip()     
-        
-        if val in lst:        
-            self.parent.shapes[self._key]["color"] = val  
-        else:
-            self.parent.shapes[self._key]["color"] = val 
+        self.parent.parent.col[value] = value
+        self.parent.shapes[self._key]["color"] = value 
 
     @property
     def fill(self):

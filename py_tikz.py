@@ -6,6 +6,7 @@ import cls_points
 import cls_shapes
 import cls_labels
 import cls_assembly
+import cls_colors
 import obj_data
 import subprocess
 import files_crawl as libfile
@@ -41,6 +42,7 @@ class pytikz(object):
         self.shp = cls_shapes._shapes(self)
         self.lbl = cls_labels._labels(self)
         self.asse = cls_assembly._assemblys(self)
+        self.col = cls_colors._colors(self)
         
         self.opt = obj_data._clsdata(type = None)
         
@@ -134,6 +136,7 @@ class pytikz(object):
         #route_png = os.path.join(path, name + ".png")
         route_dvi = os.path.join(path, name + ".tikz.dvi")
         route_eps = os.path.join(path, name + ".tikz.eps")
+        route_jpg = os.path.join(path, name + ".tikz.jpg")
         route_tik = os.path.join(path, name + self.extension)
         
         self._write_tikz(route_tik, True)
@@ -146,8 +149,18 @@ class pytikz(object):
         lst = ["dvips", "-o", route_eps, route_dvi]
         p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
         out, err = p.communicate()        
-                
+        
+        #if as_jpg:
+        #   ### Uses PIL and requeres ghostscript
+        #   self._save_as_jpg(route_eps, route_jpg)
+            
         return route_eps    
+    
+    def _save_as_jpg(self, route_eps, route_jpg):
+        from PIL import Image
+        im = Image.open(route_eps)
+        im.load(scale=2)
+        im.save(route_jpg, "JPEG")        
     
     def save_pdf(self, path, name, as_png = True):
     
@@ -171,7 +184,8 @@ class pytikz(object):
             
         .. note::
             
-            * Dependent on the local latex instalation, use pdflatex to pdf
+            * Dependent on the local latex instalation, use **pdflatex** to generate a pdf
+            * To save pdfs as png files requires **ImageMagick** to be installed, uses convert command
             * See example
         
         """  
@@ -190,11 +204,11 @@ class pytikz(object):
         out, err = p.communicate()
         
         ### Create png
-        if as_png:
-            lst = ["convert", "-density", "1000", route_pdf, "-quality", "100",route_png]
+        if as_png:            
+            lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
             p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
-            out, err = p.communicate()        
-                
+            out, err = p.communicate()
+            
         return route_pdf
         
     def save_tikz_stanalone(self, path, name):
@@ -264,7 +278,7 @@ class pytikz(object):
         with open(path, 'w') as f:
             
             self._header_open(f, intex)
-            
+                        
             self._add_assemblies()
             
             self._add_lines(f)
@@ -272,6 +286,16 @@ class pytikz(object):
             self._close(f, intex)
             
         f.close()
+    
+    def _add_colors(self, f):
+        
+        lst = self.col._colors_to_define_lst_text()
+        
+        if len(lst) > 0:
+            
+            for l in lst:
+                           
+                self._wline(f,l,1)   
     
     def _add_assemblies(self):
         
@@ -363,6 +387,8 @@ class pytikz(object):
         self._wline(f,txt,1)
         self._wline(f,"",1)
         
+        self._add_colors(f)
+        
         txt = "%%" + self.description
         self._wline(f,txt,1)
         self._wline(f,"",1)
@@ -432,7 +458,7 @@ class pytikz(object):
         print txt
         
     def error(self, txt, ref = ""):
-        raise ValueError(ref + "--" + txt)
+        raise ValueError("%s-%s" % (ref,txt))
        
     
         

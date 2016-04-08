@@ -2,6 +2,7 @@
 # FLC 2013
 
 import math
+import numpy as np
 import numbers
 import obj_data
 
@@ -81,7 +82,6 @@ class _points(object):
             pass
             
     def point(self, key):        
-        
         ### Give a point
         _key = str(key)
         
@@ -90,20 +90,61 @@ class _points(object):
         else:
             return None
     
-    def _point_format(self, x, y, z = 0, layer = 0, alias = ""):
+    def _type_of_point(self):
+        ### Returns the type of point
+        return type(_point(self,None))
         
-        return [x,y,z,[int(layer)],alias]
+    def _choices(self, v):
+        ### returns the point object, v types: as id, alias or point
+        if type(v) == type(""):
+            #empty name
+            if v == "":
+                self.parent.error("Wrong point format while adding a point, empty string. In addpto.", ref = "")  
+            #id or alias
+            if v[0] == "#":
+                pt = self.parent.pto[v]
+            else:
+                pt = self.parent.pto.alias(v)
+            #return point
+            if pt is None:
+                self.parent.error("Wrong point format while adding a point, empty string. In addpto.", ref = "")        
+            else:
+                return pt
+        elif type(v) == self.parent.pto._type_of_point():
+            return v
+        else:
+            self.parent.error("Wrong point format while adding a point. In addpto.", ref = "")            
+    
+    def _check_alias(self, alias):
+        ### Check alias possibilities
+        
+        if alias == "":
+            return True
+        if type(alias) == type(""):
+            if alias[0] == "#":
+                self.parent.error("Alias name can not start with a # character. In _check_alias")
+            else:
+                if self.alias(alias) is None:
+                    return True
+                else:
+                    self.parent.error("Alias already exist. In _check_alias")
+        else:   
+            self.parent.error("Alias of point is not a string value. In _check_alias")
+    
+    def _point_format(self, x, y, z = 0, layer = 0, alias = ""):
+        ### Bottle neck point
+        self._check_alias(alias)
+        return [x,y,z,[int(layer)],str(alias)]
     
     def addpoint(self, x, y, z = 0, layer = 0, alias = ""):
-        
-        # Create auto new
+        # Create new point
         _key =  "#%i" % self.counters["points"]
         self.counters["points"] = self.counters["points"] + 1
         self.points[_key] = self._point_format(x, y, z = z , layer = layer, alias = alias)
         return self.point(_key)
     
     def auxpoint(self, x=0, y=0, z = 0, layer = 0):
-    
+        # Create new auxiliary
         lst = self._point_format(x, y, z = z , layer = layer)
         p = _point(self, None, lst)
         if self.auto_save_aux: p.save()
@@ -180,7 +221,7 @@ class _points(object):
             
         .. note::
         
-            * Alias is not a unique identification. If more than two points with the same alias. The first is return.
+            * Alias can be empty or be a unique identification. Can not start with a **#** character.
         
         """    
         
@@ -190,9 +231,165 @@ class _points(object):
             
             p = self.point(_key)
             
-            if p.alias == alias: return p
+            if p is not None:
+                if p.alias == str(alias): return p
         
-        return None         
+        return None  
+
+    def translate(self, ptos, x = 0., y = 0., z = 0.):
+    
+        """
+        
+        .. _pto_translate:         
+                
+        **Synopsis:**
+            * Translate a point of list of points in a 3D space
+        
+        **Args:**
+            * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            
+        **Optional parameters:**
+            * x = 0: x coordinate translation
+            * y = 0: y coordinate translation
+            * z = 0: z coordinate translation
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * See :ref:`addpto examples <ex_shapes_addpto>`
+        
+        """    
+        
+        if type(ptos) is type([]):       
+            for v in ptos:
+                _pto = self._choices(v)
+                _pto.x = _pto.x + x
+                _pto.y = _pto.y + y
+                _pto.z = _pto.z + z
+        else:
+            _pto = self.pto._choices(ptos)
+            _pto.x = _pto.x + x
+            _pto.y = _pto.y + y
+            _pto.z = _pto.z + z 
+            
+    def rotate(self, ptos, pto_rotation = None, Ax = 0., Ay = 0., Az = 0.):
+    
+        """
+        
+        .. _pto_rotate:         
+                
+        **Synopsis:**
+            * Rotate a point of list of points in a 3D space respect an oringin point
+        
+        **Args:**
+            * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            
+        **Optional parameters:**
+            * pto_rotation = None: center point of rotation
+            * Ax = 0.: yaw angle in degrees to turn respect axis X
+            * Ay = 0.: pitch angle in degrees to turn respect axis Y
+            * Az = 0.: roll angle in degrees to turn respect axis Z
+            
+        **Returns:**
+            * None
+            
+        .. note::
+        
+            * See :ref:`addpto examples <ex_shapes_addpto>`
+        
+        """
+        def _rotation_matrix(Ax,Ay,Az):
+            
+            AAx,AAy,AAz = Ax*np.pi/180.,Ay*np.pi/180.,Az*np.pi/180.
+            Rx = np.matrix([[1.,0.,0.], [0.,np.cos(AAx),-np.sin(AAx)], [0., np.sin(AAx), np.cos(AAx)]])
+            Ry = np.matrix([[np.cos(AAy),0.,np.sin(AAy)], [0.,1.,0.], [-np.sin(AAy), 0., np.cos(AAy)]])
+            Rz = np.matrix([[np.cos(AAz),-np.sin(AAz),0.], [np.sin(AAz),np.cos(AAz),0.], [0., 0., 1.]])
+            
+            return (Rx*Ry)*Rz
+            
+        def _rotate(self,_pto,pto_rotation,R):
+            #Tranlate to oringin
+            if type(pto_rotation) == self._type_of_point():
+                trans = pto_rotation - _pto
+                tx,ty,tz = trans.x,trans.y,trans.z
+                self.translate(_pto, x = tx, y = ty, z = tz)
+            else:
+                self.parent.error("Origing point in translate not a point")
+            #Rotate
+            x, y, z = _pto.x, _pto.y, _pto.z
+            _pto.x = x * R[0,0] + y * R[0,1] + z * R[0,2]
+            _pto.y = x * R[1,0] + y * R[1,1] + z * R[1,2]
+            _pto.z = x * R[2,0] + y * R[2,1] + z * R[2,2]
+            
+            #Un-translate to origin
+            if type(pto_rotation) == self._type_of_point():
+                self.translate(_pto, x = -tx, y = -ty, z = -tz)
+            
+        ### Check lists
+        R = _rotation_matrix(Ax,Ay,Az)
+        if type(ptos) is type([]):       
+            for v in ptos:
+                _pto = self._choices(v)
+                self._rotate(self,_pto,pto_rotation,R)
+        else:
+            _pto = self._choices(ptos)
+            self._rotate(self,_pto,pto_rotation,R)            
+        
+    def copy(self, ptos, alias_prefix = "", alias_sufix = ""):
+    
+        """
+        
+        .. _pto_copy:         
+                
+        **Synopsis:**
+            * Returns a copy of the list of points
+        
+        **Args:**
+            * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            
+        **Optional parameters:**
+            * alias_sufix = "": Add a sufix to the alias of each point
+            * alias_prefix = "": Add a prefix to the alias of each point
+            
+        **Returns:**
+            * List of points copied, with the alias modified
+            
+        .. note::
+        
+            * If alias_sufix and alias_prefix is "", an empty alias for each copied point is return
+            * See :ref:`addpto examples <ex_shapes_addpto>`
+        
+        """    
+        lst_out = []
+        if len(ptos) == 0: return []
+        
+        if type(ptos) is type([]):       
+            for v in ptos:
+                _pto = self._choices(v)
+                
+                _alias = _pto.alias
+                if alias_prefix != "" and type(alias_prefix) == type(""):
+                    _alias = alias_prefix + _alias
+                if alias_sufix != "" and type(alias_sufix) == type(""):
+                    _alias = _alias + alias_sufix
+                if _alias == _pto.alias: _alias = "" 
+                
+                lst_out.append(_pto.copy(alias = _alias))
+        else:
+            _pto = self._choices(ptos)
+            
+            _alias = _pto.alias
+            if alias_prefix != "" and type(alias_prefix) == type(""):
+                _alias = alias_prefix + _alias
+            if alias_sufix != "" and type(alias_sufix) == type(""):
+                _alias = _alias + alias_sufix            
+            if _alias == _pto.alias: _alias = ""
+            
+            lst_out.append(_pto.copy(alias = _alias))
+        
+        return lst_out
         
 #################################################        
 #################################################        
@@ -319,7 +516,7 @@ class _point(object):
         return self._mul(other)               
         
     def __repr__(self):
-        return self.__class__
+        return self.id
         
     def __str__(self):
         return self.info
@@ -340,8 +537,8 @@ class _point(object):
         else:
             p = self.parent.auxpoint(self.x, self.y, z = self.z , layer = self.layer)
         
-        return p           
-
+        return p 
+    
     def __deepcopy__(self, memo):
         
         return self.copy()

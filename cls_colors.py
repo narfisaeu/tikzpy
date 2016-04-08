@@ -1,14 +1,45 @@
 #!/usr/bin/python 
 # FLC 2013
 
-class _clscolors(object):
+class _colors(object):
+   
+    """**Colors object:** 
+    
+    .. _colors_cls:
+   
+    :platform: Unix, Windows
+    :synopsis: Allows to add colors in different formats, with or without tranparency. As well as modifiying the values.
+    
+    :ivar names: get list of unique ids of the colors containt in the colors object
+    :ivar num_colors: get number of unique ids of the colors containt in the colors object
+
+    **Chracteristics of a colors (pyTikZ.col) object**
+    
+        * The object colors is workable as a python dictionary
+        * A color can be set by his name, pyTikZ.col["navy"] = "blue"
+        * A color can be get by his name, color_value = pyTikZ.col["navy"]
+    
+    """   
    
     def __init__(self, parent):
         
         self.parent = parent
         self._colors = {}
         self._default = ["red" , "green" , "blue" , "cyan", "magenta" , "yellow" , "black" , "gray" , "darkgray" , "lightgray" , "brown" , "lime" , "olive" , "orange" , "pink" , "purple" , "teal" , "violet", "white"]
+    
+    ########################## Properties
+    @property
+    def num_colors(self):
+        return len(self._colors)
         
+    @property
+    def names(self):
+        return self._colors.keys()
+    
+    ########################## Functions
+    
+    
+    ########################## Functions internal
     def _colors_to_define_lst(self):
         ### Returns the colors that need to be defined previously
         lst = []
@@ -31,13 +62,22 @@ class _clscolors(object):
                 
             return lst_out
            
-        return None
+        return []
+    
+    ########################## Get items
+    def _check_names(self,name):
+        ###
+        lst = name.split("_")
+        if len(lst) == 3 or len(lst) == 4:        
+            name = "a" + name.replace("_","") + "b"
+        return name
         
-    def __getitem__(self, name):
+    def __getitem__(self, vname):
         ### Get a given color
+        name = self._check_names(vname)
         fval = self._return_color_format(name)
-        if val is None:
-            self.parent.error("Color (%s) assing wrong format of value (%s)" % (name, value))
+        if fval is None:
+            self.parent.error("Color (%s) assigning wrong format of value (%s)" % (name, fval))
         else:
             return fval
     
@@ -61,15 +101,25 @@ class _clscolors(object):
                 return None
         else:
             return None
-        
-    def __setitem__(self, name, value):
-        ### Set a given color
-        val = self._check_color_format(value)
-        if val is None:
-            self.parent.error("Color (%s) assing wrong format of value (%s)" % (name, value))
-        else:
-            self._colors[name] = val
     
+    ########################## Set items  
+    def __setitem__(self, vname, value):
+        ### Set a given color
+        name = self._check_names(vname)
+        
+        if self._check_key(name):
+            ### Assigned by name, predifined
+            pass
+        else:      
+            if value == "" or value is None:
+                pass
+            else:
+                val = self._check_color_format(value)
+                if val is None:
+                    self.parent.error("Color (%s) wrong format or not previously defined. In __setitem__" % (name))
+                else:
+                    self._colors[name] = val
+                    
     def _check_color_format(self, txt):
         ### Check possible formats of the value
         if txt in self._default:
@@ -93,15 +143,16 @@ class _clscolors(object):
             lst = txt.split("_")
             if len(lst) == 3:
                 ### 255_255_255, rgb without transparency
-                txt = "%s_%s_%s" % (int(lst[0]),int(lst[1]),int(lst[2]))
+                txt = "%s,%s,%s" % (int(lst[0]),int(lst[1]),int(lst[2]))
                 return self._color_format(txt, type_col = 3, trans = 0)
             elif len(lst) == 4:
                 ### 255_255_255_10, rgb with transparency
-                txt = "%s_%s_%s" % (int(lst[0]),int(lst[1]),int(lst[2]))
+                txt = "%s,%s,%s" % (int(lst[0]),int(lst[1]),int(lst[2]))
                 return self._color_format(txt, type_col = 4, trans = int(lst[3]))                    
             else:
                 return None
-                    
+    
+    ########################## Others           
     def _color_format(self, cname, type_col = False, trans = 0.,cname2 = ""):
         ### List to be save in the dictionary
         return [cname, type_col, trans, cname2]
@@ -123,7 +174,7 @@ class _clscolors(object):
         return False
         
     def _check_key(self, key):
-        if key in self._colors.keys:
+        if key in self._colors:
             return True
         else:
             return False

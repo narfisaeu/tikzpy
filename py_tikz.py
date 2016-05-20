@@ -7,6 +7,7 @@ import cls_shapes
 import cls_labels
 import cls_assembly
 import cls_colors
+import cls_canavas
 import obj_data
 import subprocess
 import files_crawl as libfile
@@ -43,6 +44,7 @@ class pytikz(object):
         self.lbl = cls_labels._labels(self)
         self.asse = cls_assembly._assemblys(self)
         self.col = cls_colors._colors(self)
+        self.grp = cls_canavas._canavas(self)
         
         self.opt = obj_data._clsdata(type = None)
         
@@ -54,44 +56,8 @@ class pytikz(object):
         self.opt.extension = ".tikz.tex"
         self.opt.dpi = 300
     
-    ###########################
-    
-    def move_list_shapes(self, vector, lst):
-    
-        """
-        
-        .. _move_list_shapes:         
-                
-        **Synopsis:**
-            * Move a shape, assembly... object according a vector of movement
-        
-        **Args:**
-            * vector: spatial vector of movement
-            * lst: list of shapes, assemblies... object or a single object
+    ########################### Functions
             
-        **Returns:**
-            * None
-            
-        .. note::
-        
-            * See example
-        
-        """     
-    
-        for shp in lst:
-            
-            shp.move(vector)
-        
-        
-    def copy_list_shapes(self, lst):
-        
-        lst_out = []
-        for shp in lst:
-            
-            lst_out.append( shp.copy() )
-        
-        return lst_out
-        
     def add_label_to_list_shapes(self, lst, label):
         
         self.shp.addlabel = label
@@ -204,7 +170,7 @@ class pytikz(object):
         out, err = p.communicate()
         
         ### Create png
-        if as_png:            
+        if as_png:     
             lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
             p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
             out, err = p.communicate()
@@ -271,7 +237,7 @@ class pytikz(object):
         
         return route
         
-    ###########################
+    ########################### Outputting TikZ
     
     def _write_tikz(self, path, intex = False):
     
@@ -403,7 +369,7 @@ class pytikz(object):
             txt = r"\end{document}"
             self._wline(f,txt,0)        
     
-    ###########################
+    ########################### Properties
     
     @property
     def dpi(self):

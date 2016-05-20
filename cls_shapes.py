@@ -23,13 +23,10 @@ class _shapes(object):
         * Possible shapes
             * Line between two points. See :ref:`shp.line <shapes_line>`
             * Path of multiple points. See :ref:`shp.path <shapes_path>`
-            * Rectangle given by two corners
-            * Circle given by center and radius
-            * Arc given by starting point, radius and angles
-            * Grid rectangle
-            * Text frame
-            * Parabola given by three points
-        * Shapes allow to set labels (see labels section)
+            * Circle given by center and radius. See :ref:`shp.circle <shapes_circle>`
+            * Arc given by starting point, radius and angles. See :ref:`shp.arc <shapes_arc>`
+            * Text label. See :ref:`shp.text <shapes_text>`
+        * Shapes allow to set labels (see labels section). See :ref:`labels <labels_cls>`
     
     **Chracteristics of a shape (shp) object**
     
@@ -39,8 +36,21 @@ class _shapes(object):
     
     """
         For the furture:
+            * Grid rectangle
+            * Rectangle given by two corners
+            * Parabola given by three points        
             * Add mapbits, images
-            * Translate and rotation
+            * Add translate of shps -- April 2016
+            * Add scale of shps
+            * Add rotation of shps -- April 2016
+            * Add copy of shps -- April 2016
+            * Review labels -- May 2016
+            * Add opacity, section 21
+            * Add patterns
+            * Check fill examples
+            * Add decorations (review in type)
+            * .add_arc(angle_in, angle_out, radius ) -- arc (90:-90:.5)
+            * add_cycle in a line
     """
     
     def __init__(self, parent):
@@ -53,6 +63,12 @@ class _shapes(object):
         ### Dictionary of lines
         self.shapes = obj_data._clsdata(type = {})
         self.counters["shapes"] = 0    
+        
+    def log(self, txt, ref = ""):
+        self.parent.log(txt, ref = ref)
+        
+    def error(self, txt, ref = ""):
+        self.parent.error(txt, ref = ref)        
         
     def __getitem__(self, key):
     
@@ -95,11 +111,12 @@ class _shapes(object):
            
         **Chracteristics of a shape line object**
         
-        :ivar id: get unique id of the point
+        :ivar id: get unique id of the shape object
         :ivar action: get type of shape object
         :ivar zorder: set/get z position respect the drawing plane and viewer
-        :ivar labels: get labels to which the shape belongs
-        :ivar addlabel: set/get add a label to the shape
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
         :ivar arrow: set/get arrow parameters (see arrows examples)
@@ -148,11 +165,12 @@ class _shapes(object):
            
         **Chracteristics of a shape line object**
         
-        :ivar id: get unique id of the point
+        :ivar id: get unique id of the shape object
         :ivar action: get type of shape object
         :ivar zorder: set/get z position respect the drawing plane and viewer
-        :ivar labels: get labels to which the shape belongs
-        :ivar addlabel: set/get add a label to the shape
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
         :ivar arrow: set/get arrow parameters (see arrows examples)
@@ -205,11 +223,12 @@ class _shapes(object):
            
         **Chracteristics of a shape circle object**
         
-        :ivar id: get unique id of the point
+        :ivar id: get unique id of the shape object
         :ivar action: get type of shape object
         :ivar zorder: set/get z position respect the drawing plane and viewer
-        :ivar labels: get labels to which the shape belongs
-        :ivar addlabel: set/get add a label to the shape
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
         :ivar arrow: set/get arrow parameters (see arrows examples)
@@ -260,11 +279,12 @@ class _shapes(object):
            
         **Chracteristics of a shape arc object**
         
-        :ivar id: get unique id of the point
+        :ivar id: get unique id of the shape object
         :ivar action: get type of shape object
         :ivar zorder: set/get z position respect the drawing plane and viewer
-        :ivar labels: get labels to which the shape belongs
-        :ivar addlabel: set/get add a label to the shape
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
         :ivar arrow: set/get arrow parameters (see arrows examples)
@@ -286,23 +306,76 @@ class _shapes(object):
         item.start_angle = float(start_angle)
         item.end_angle = float(end_angle)
         item.addpto = start_point
+        if thick != "": item.thick = thick
+        if type != "":  item.type = type
+        if color != "": item.color = color
+        if fill != "": item.fill = fil        
         
         return item        
+    
+    def text(self, pto, text, layer = 0, color = "", fill = "", rotate_text = 0, position = "", align = ""):
+        """
+        .. _shapes_text:         
+                
+        **Synopsis:**
+            * Add a text. Referenced by a point position.
         
+        **Args:**
+            * pto: point reference for the text node
+            * text: text to be added
+            
+        **Optional parameters:**
+            * layer = 0: layer member where the shape belongs
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
+            * fill = "": fill texture of the line (see fill examples)
+            * rotate_text = 0.: float number in degrees of text rotation
+            * position = "": "above" , "below" , "left" , "right", "above left" , "below left" , "above right" , "below right"
+            * align = "": "left" , "center" , "right"
+            
+        **Returns:**
+            * An text shape object
+           
+        **Chracteristics of a shape text object**
+        
+        :ivar id: get unique id of the shape object
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane and viewer
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
+        :ivar comment: multifunctional text field
+        
+        :ivar color: set/get color of the text (see :ref:`colors examples <ex_shapes_color>`)
+        :ivar fill: set/get fill texture of the text (see fill examples)       
+        
+        :ivar text: set/get text label
+        :ivar rotate_text: float number in degrees of text rotation
+        :ivar position: options: "above" , "below" , "left" , "right", "above left" , "below left" , "above right" , "below right"
+        :ivar align: options: "left" , "center" , "right"    
+        
+        .. note::
+        
+            * See :ref:`text examples <ex_shapes_text>`
+            
+        """      
+        
+        item = self._additem("text", layer = layer)          
+        item.text = text
+        item.addpto = pto
+        if color != "": item.color = color
+        if fill != "": item.fill = fill          
+        if rotate_text != 0.: item.rotate_text = rotate_text         
+        if position != "": item.position = position       
+        if align != "": item.align = align       
+               
+        return item     
+    
     def grid(self, step, xstep = 0, ystep = 0, layer = 0):
         
         item = self._additem("grid", layer = layer)          
         item.step = [step, xstep, ystep]
         
-        return item
-        
-    def text(self, pto, text, layer = 0):
-        
-        item = self._additem("text", layer = layer)          
-        item.text = text
-        item.addpto = pto
-        
-        return item  
+        return item 
     
     def parabola(self, pto1, ptobend, pto2, layer = 0):
         
@@ -311,12 +384,163 @@ class _shapes(object):
         item.addpto = ptobend
         item.addpto = pto2
         
-        return item        
+        return item       
         
+        
+    def copy(self, shps):
+        
+        """
+        .. _shapes_copy_list:         
+                
+        **Synopsis:**
+            * For a list of shapes (give by id or object), it return a list of ids copied shapes
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            
+        **Optional parameters:**
+            * None
+            
+        **Returns:**
+            * List of unique ids of the copied shapes
+                
+        .. note::
+        
+            * See example :ref:`copy shapes <ex_groups_ex2>`.
+        
+        """        
+        
+        lst_out = []
+            
+        if type(shps) is type([]):
+            
+            for shp in shps:
+                id = self._check_shp(shp)
+                _shp = self.getitem(id).copy()
+                lst_out.append( _shp.id )            
+        
+        else:
+            id = self._check_shp(shps)
+            _shp = self.getitem(id).copy()
+            lst_out.append( _shp.id )          
+        
+        return lst_out
+        
+    def translate(self, shps, x = 0., y = 0., z = 0.):
+        
+        """
+        
+        .. _shapes_translate:      
+                
+        **Synopsis:**
+            * Translate a shapes of list in a 3D space
+        
+        **Args:**
+             * shps: list of shapes or single shape. Given by id or shape object.
+            
+        **Optional parameters:**
+            * x = 0: increment in x coordinate to tranlate
+            * y = 0: increment in y coordinate to tranlate
+            * z = 0: increment in z coordinate to tranlate
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * See example :ref:`translate shapes <ex_groups_ex2>`.
+        
+        """  
+
+        ### Create auxiliary group
+        grp = self.parent.grp._auxgroup()
+        grp.add = shps
+        
+        ### Translate
+        self.parent.pto.translate(grp.ptos_of_shapes, x = x, y = y, z = z)
+        
+    def translate_to(self, shps, pto_ref, pto_ref_final):
+    
+        """
+        
+        .. _shapes_translate_to:         
+                
+        **Synopsis:**
+            * Given a reference point and a final position for such point. Translate a shape or list of shapes in a 3D space in a similar manner.
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            
+        **Optional parameters:**
+            * pto_ref: reference point
+            * pto_ref_final: final refence point position
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * See example :ref:`translate shapes <ex_groups_ex2>`.
+        
+        """    
+        
+        ### Create auxiliary group
+        grp = self.parent.grp._auxgroup()
+        grp.add = shps
+        
+        ### Translate       
+        self.parent.pto.translate_to(grp.ptos_of_shapes, pto_ref, pto_ref_final)  
+
+    def rotate(self, shps, pto_rotation, Ax = 0., Ay = 0., Az = 0.):
+    
+        """
+        
+        .. _shapes_rotate:         
+                
+        **Synopsis:**
+            * Rotate a shape of list of shapes in a 3D space respect an origin point
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            * pto_rotation: center point of rotation
+            
+        **Optional parameters:**
+            * Ax = 0.: yaw angle in degrees to turn respect axis X
+            * Ay = 0.: pitch angle in degrees to turn respect axis Y
+            * Az = 0.: roll angle in degrees to turn respect axis Z
+            
+        **Returns:**
+            * None
+            
+        .. note::
+        
+            * See example :ref:`rotation shapes <ex_groups_ex3>`.
+        
+        """    
+
+        ### Create auxiliary group
+        grp = self.parent.grp._auxgroup()
+        grp.add = shps
+        
+        ### Translate       
+        self.parent.pto.rotate(grp.ptos_of_shapes, pto_rotation, Ax = Ax, Ay = Ay, Az = Az)
+        
+    
+    ######################### 
+    def _check_shp(self, val):
+        ### Check type of shape entry
+        
+        if type(val) is self._type_of_shape():
+            id = val.id
+        else:
+            id = self.getitem(val).id
+            if id is None: self.error("Error key.", ref = "shapes_copy_list")
+        return id    
+    
     def _additem(self, type, layer = 0):
         
         # Create auto new
-        _key =  "#%i" % self.counters["shapes"]
+        _key =  "#s%i" % self.counters["shapes"]
         self.counters["shapes"] = self.counters["shapes"] + 1
         self.shapes[_key] = {}
         
@@ -326,26 +550,190 @@ class _shapes(object):
         lline.addlabel = "default"
         return lline
     
-    #########################
-    @property
-    def labels(self):
-        return self.parent.lbl.labels
+    def _type_of_shape(self):
+        ### Returns the type of shape
+        return type(_shape(self,None))      
     
-    @property
-    def addlabel(self):
-        return self.labels
+    ######################### Mod properties in block
+    def zorder_to_shapes(self, shps, value):
+        """
         
-    @addlabel.setter
-    def addlabel(self, value):
-        self.parent.lbl.addlabel = value        
+        .. _shapes_zorder_to_shapes:   
+                
+        **Synopsis:**
+            * Modify zorder value for a shape or list of shapes
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            * value: zorder value            
             
-    def dellabel(self, value):
-        if value in self.labels:
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * zorder: z position respect the drawing plane and viewer
+        
+        """        
+        self._mod_properties(shps, value, "zorder")
+        
+    def thick_to_shapes(self, shps, value):
+        """
+        
+        .. _shapes_thick_to_shapes:   
+                
+        **Synopsis:**
+            * Modify thick value for a shape or list of shapes
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            * value: thick value            
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * thick: shape thickness (see :ref:`thick examples <ex_shapes_thick>`)
+        
+        """        
+        self._mod_properties(shps, value, "thick")   
+
+    def type_to_shapes(self, shps, value):
+        """
+        
+        .. _shapes_type_to_shapes:   
+                
+        **Synopsis:**
+            * Modify type value for a shape or list of shapes
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            * value: type value            
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * type: type of shape (see :ref:`type examples <ex_shapes_type>`)
+        
+        """        
+        self._mod_properties(shps, value, "thick")        
+        
+    def color_to_shapes(self, shps, value):
+        """
+        
+        .. _shapes_color_to_shapes:   
+                
+        **Synopsis:**
+            * Modify color value for a shape or list of shapes
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            * value: color value            
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * color: color of the shape (see :ref:`colors examples <ex_shapes_color>`)
+        
+        """        
+        self._mod_properties(shps, value, "color")    
+
+    def fill_to_shapes(self, shps, value):
+        """
+        
+        .. _shapes_fill_to_shapes:   
+                
+        **Synopsis:**
+            * Modify fill value for a shape or list of shapes
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            * value: fill value            
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * fill: fill texture of the shape (see fill examples)
+        
+        """        
+        self._mod_properties(shps, value, "fill")         
+    
+    def _mod_properties(self, shps, value, txt_property):
+        ### Modifies properties by name
+        
+        def _mode_prop(_shp, txt_property, val, islist):
+            if txt_property == "addlabel":
+                _shp.addlabel = val            
+            elif txt_property == "dellabel":
+                _shp.dellabel = val
+            elif txt_property == "zorder":
+                if islist: self.error("Not accept lists of zorder")
+                _shp.zorder = val
+            elif txt_property == "thick":
+                if islist: self.error("Not accept lists of thick")
+                _shp.thick = val  
+            elif txt_property == "type":
+                if islist: self.error("Not accept lists of type")
+                _shp.type = val   
+            elif txt_property == "color":
+                if islist: self.error("Not accept lists of color")
+                _shp.color = val        
+            elif txt_property == "fill":
+                if islist: self.error("Not accept lists of fill")
+                _shp.fill = val                
+            else:
+                self.error("Wrong labeling ")
+            
+        ### Create auxiliary group
+        grp = self.parent.grp._auxgroup()
+        grp.add = shps
+        
+        ### Iterate
+        for _shp in grp.shps:
+            if type(value) == type([]):
+                for _value in value:
+                    _mode_prop(_shp, txt_property, _value, True)                   
+            else:
+                _mode_prop(_shp, txt_property, value, False)                           
+        
+     ######################### Labels
+    def _shapes_by_label(self, value):
+        ### Return list of shapes by label or list of labels
+        lst = []
+        
+        if type(value) == type([]):
+            for _value in value:
+                for key in self.keys():
+                    shp = self.getitem(key)             
+                    if _value in self.shapes[key]["labels"]:
+                        if shp.id not in lst:
+                            lst.append(shp.id)            
+            
+        else:
+            for key in self.keys():
+                shp = self.getitem(key)             
+                if value in self.shapes[key]["labels"]:
+                    if shp.id not in lst:
+                        lst.append(shp.id)
+        
+        return lst
+        
+    def _dellabel(self, value):
+        ### Delete a label from all the shapes
+        
+        if value in self.parent.lbl.labels:
             
             ### Delete from all the shapes
             for key in self.keys():
                 shp = self.getitem(key)             
-                shp.dellabel(value)
+                shp.dellabel = value
             
             ### Remake list
             self.parent.lbl._dellabel(value)
@@ -355,18 +743,20 @@ class _shapes(object):
             #log("The label %s has not been previously declared" % value)   
             return False
 
-    def rename_label(self, name_old, name_new):
+    def _rename_label(self, name_old, name_new):
+        ### Rename a label from all the shapes
+        
         if name_old != name_new:            
                         
             ### Add new name
-            self.addlabel=name_new
+            self.parent.lbl.addlabel = name_new
             
             ### Delete from all the shapes
             for key in self.keys():
                 shp = self.getitem(key)             
                 if name_old in self.shapes[key]["labels"]:
-                    shp.dellabel(name_old)
-                    shp.addlabel=name_new
+                    shp.dellabel = name_old
+                    shp.addlabel = name_new
             
             ### Remake list
             self.parent.lbl._dellabel(name_old)
@@ -374,7 +764,7 @@ class _shapes(object):
             return True
         else:
             #log("Inconsistent")            
-            return False
+            return False          
             
 class _shape(object):
    
@@ -383,6 +773,8 @@ class _shape(object):
         self.parent = parent
         self._key = key
         self._draw = False
+        
+        if key is None: return
         
         if not self.parent.shapes[key]:
         
@@ -419,22 +811,9 @@ class _shape(object):
         for key in self.parent.shapes[self.id].keys():
             
             self.parent.shapes[shp.id][key] = copy.deepcopy(self.parent.shapes[self.id][key])
-           
-    def move(self, mpto):
         
-        lst = []
+        return shp
         
-        for pto in self.addpto:        
-            
-            lst.append( pto.copy() )
-            new_pto = lst[-1]
-            
-            new_pto.x = new_pto.x + mpto.x
-            new_pto.y = new_pto.y + mpto.y
-            new_pto.z = new_pto.z + mpto.z
-            
-        self.parent.shapes[self._key]["ptos"] = copy.deepcopy(lst)   
-    
     def build_tik_string(self, units = ""):
         
         str = ""
@@ -500,7 +879,7 @@ class _shape(object):
             else:
                 log("Less than one point for the circle %s" % self.id)   
 
-            str = r"\draw %s %s;" % (opt, ptos)  
+            str = r"\draw %s %s;" % (opt, ptos)
 
         if self.action == "arc":
             
@@ -553,7 +932,6 @@ class _shape(object):
             #if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             #if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            #if self.fill != "": opt += self.fill + " ,"            
             if self.fill != "": opt += self.fill + " ,"   
             if self.position != "": opt += self.position + " ,"   
             if self.align != "": opt += "align=" + self.align + " ,"            
@@ -744,10 +1122,6 @@ class _shape(object):
         else:
             self.parent.shapes[self._key]["type"] = val      
         
-    def line_color_options(self):
-        lst = ["red" , "green" , "blue" , "cyan", "magenta" , "yellow" , "black" , "gray" , "darkgray" , "lightgray" , "brown" , "lime" , "olive" , "orange" , "pink" , "purple" , "teal" , "violet", "white"]
-        return lst
-        
     @property
     def color(self):
         # name, black!30, green!20!white, 255_255_255, 255_255_255_0, custom defined in colors
@@ -758,8 +1132,9 @@ class _shape(object):
         
     @color.setter
     def color(self, value):
-        self.parent.parent.col[value] = value
-        self.parent.shapes[self._key]["color"] = value 
+        val = str(value).lower().strip()
+        self.parent.parent.col[val] = val
+        self.parent.shapes[self._key]["color"] = val 
 
     @property
     def fill(self):
@@ -769,13 +1144,9 @@ class _shape(object):
     
     @fill.setter
     def fill(self, value):
-        lst = self.line_color_options()
-        val = str(value).lower().strip()     
-        
-        if val in lst:        
-            self.parent.shapes[self._key]["fill"] = "fill=" + val  
-        else:
-            self.parent.shapes[self._key]["fill"] = val              
+        val = str(value).lower().strip()
+        self.parent.parent.col[val] = val
+        self.parent.shapes[self._key]["fill"] = val
     
     @property
     def action(self):
@@ -800,48 +1171,7 @@ class _shape(object):
     @zorder.setter
     def zorder(self, value):
         self.parent.shapes[self._key]["z-order"] = float(value)  
-
-    @property
-    def _labels(self):
-        return self.parent.shapes[self._key]["labels"]
-        
-    @property
-    def labels(self):
-        return copy.deepcopy(self.parent.shapes[self._key]["labels"])
-       
-    @property
-    def addlabel(self):
-        return self.labels
-        
-    @addlabel.setter
-    def addlabel(self, value):
-        if type(value) is type([]):
-            for val in value:
-                self.addlabel = val
-        else:    
-            if value in self.parent.labels:
-                if not value in self.parent.shapes[self._key]["labels"]:
-                    self.parent.shapes[self._key]["labels"].append(value)
-                return True
-            else:
-                self.parent.addlabel = value
-                if not value in self.parent.shapes[self._key]["labels"]:
-                    self.parent.shapes[self._key]["labels"].append(value)
-                return True
-            
-    def dellabel(self, value):
-        if value in self.parent.labels:
-            if value in self.parent.shapes[self._key]["labels"]:
-                newlst = [x for x in self.labels if x != value]
-                self.parent.shapes[self._key]["labels"] = newlst
-                return True
-            else:
-                #log("The label %s has not been added before" % value)            
-                return False
-        else:
-            #log("The label %s has not been previously declared" % value)            
-            return False
-            
+           
     @property
     def comment(self):
         return self.parent.shapes[self._key]["comment"]
@@ -884,6 +1214,55 @@ class _shape(object):
             self.parent.shapes[self._key]["step"] = value
         else:
             log("Step is not a list")
+    
+    ############### Labels
+    @property
+    def _labels(self):
+        return self.parent.shapes[self._key]["labels"]
+        
+    @property
+    def labels(self):
+        return copy.deepcopy(self.parent.shapes[self._key]["labels"])
+       
+    @property
+    def addlabel(self):
+        return self.labels
+        
+    @addlabel.setter
+    def addlabel(self, value):
+        if type(value) is type([]):
+            for val in value:
+                self.addlabel = val
+        else:    
+            if value in self.parent.parent.lbl.labels:
+                if not value in self.parent.shapes[self._key]["labels"]:
+                    self.parent.shapes[self._key]["labels"].append(value)
+                return True
+            else:
+                self.parent.parent.lbl.addlabel = value
+                if not value in self.parent.shapes[self._key]["labels"]:
+                    self.parent.shapes[self._key]["labels"].append(value)
+                return True
+    
+    @property
+    def dellabel(self):
+        return self.labels    
+    
+    @dellabel.setter
+    def dellabel(self, value):
+        if value in self.parent.parent.lbl.labels:
+            if value in self.parent.shapes[self._key]["labels"]:
+                newlst = [x for x in self.labels if x != value]
+                self.parent.shapes[self._key]["labels"] = newlst
+                return True
+            else:
+                #log("The label %s has not been added before" % value)            
+                return False
+        else:
+            #log("The label %s has not been previously declared" % value)            
+            return False    
+    
+    ############### Text
     @property
     def text(self):
         return self.parent.shapes[self._key]["text"]
@@ -900,7 +1279,7 @@ class _shape(object):
     def rotate_text(self, value):
         ### float number in degrees
         self.parent.shapes[self._key]["rotate_text"] = float(value)        
-
+    
     def positions_options(self):
         lst = ["above" , "below" , "left" , "right", "above left" , "below left" , "above right" , "below right"]
         return lst
@@ -913,10 +1292,15 @@ class _shape(object):
     def position(self, value):
         lst =  self.positions_options()
         if value in lst:
-            self.parent.shapes[self._key]["position"] = value               
-        if isinstance(value, numbers.Real):
-            if int(value) >= 0 and int(value) < len(lst):
-                self.parent.shapes[self._key]["position"] = lst[int(value)]
+            self.parent.shapes[self._key]["position"] = value   
+        else:
+            if isinstance(value, numbers.Real):
+                if int(value) >= 0 and int(value) < len(lst):
+                    self.parent.shapes[self._key]["position"] = lst[int(value)]
+                else:
+                    self.parent.error("Wrong position type, %s" % value)
+            else:
+                self.parent.error("Wrong position type, %s" % value)                 
                 
     def align_options(self):
         lst = ["left" , "center" , "right"]
@@ -930,13 +1314,18 @@ class _shape(object):
     def align(self, value):
         lst =  self.align_options()
         if value in lst:
-            self.parent.shapes[self._key]["align"] = value               
-        if isinstance(value, numbers.Real):
-            if int(value) >= 0 and int(value) < len(lst):
-                self.parent.shapes[self._key]["align"] = lst[int(value)]                
-        
+            self.parent.shapes[self._key]["align"] = value
+        else:
+            if isinstance(value, numbers.Real):
+                if int(value) >= 0 and int(value) < len(lst):
+                    self.parent.shapes[self._key]["align"] = lst[int(value)]                
+                else:
+                    self.parent.error("Wrong align type, %s" % value)
+            else:
+                self.parent.error("Wrong align type, %s" % value)      
+            
     def __repr__(self):
-        return self.__class__
+        return self.id
         
     def __str__(self):
         

@@ -49,9 +49,9 @@ class _clsdata(object):
     
     def check_key(self, key):
     
-        for key in self._data.keys:
+        for _key in self._data.keys:
         
-            if key == key: return True
+            if key == _key: return True
         
         return False
     

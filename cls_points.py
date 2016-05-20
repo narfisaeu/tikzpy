@@ -48,16 +48,17 @@ class _points(object):
         Future functions:
             * Export points to csv and txt file (separate by ;)
             * Import points to csv and txt file (separate by ;)
-            * Translation of a point function
-            * Rotation of a point function
-            * Show points
+            * Add scale of ptos
+            * Translation of a point function -- April 2016
+            * Rotation of a point function -- April 2016
+            * Show points -- April 2016
     
     """
 
     def __init__(self, parent):
         
         self.parent = parent
-        self.auto_save_aux = False
+        self.auto_save_aux = False      
         
         ### Counters
         self.counters = obj_data._clsdata(type = int(0)) 
@@ -65,7 +66,9 @@ class _points(object):
         ### Dictionary of points
         self.points = obj_data._clsdata(type = [])
         self.counters["points"] = 0
-        
+    
+    ###################################### Internal
+    
     def __getitem__(self, key):
     
         return self.point(key)
@@ -149,6 +152,8 @@ class _points(object):
         p = _point(self, None, lst)
         if self.auto_save_aux: p.save()
         return p   
+       
+    ###################################### Functions
     
     def pto(self, x=0, y=0, z=0, layer = 0, alias = ""):
     
@@ -249,9 +254,9 @@ class _points(object):
             * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
             
         **Optional parameters:**
-            * x = 0: x coordinate translation
-            * y = 0: y coordinate translation
-            * z = 0: z coordinate translation
+            * x = 0: increment in x coordinate to tranlate
+            * y = 0: increment in y coordinate to tranlate
+            * z = 0: increment in z coordinate to tranlate
             
         **Returns:**
             * None
@@ -259,6 +264,7 @@ class _points(object):
         .. note::
             
             * See :ref:`addpto examples <ex_shapes_addpto>`
+            * See :ref:`example 3 <ex_points_ex3>`
         
         """    
         
@@ -269,25 +275,67 @@ class _points(object):
                 _pto.y = _pto.y + y
                 _pto.z = _pto.z + z
         else:
-            _pto = self.pto._choices(ptos)
+            _pto = self._choices(ptos)
             _pto.x = _pto.x + x
             _pto.y = _pto.y + y
             _pto.z = _pto.z + z 
             
-    def rotate(self, ptos, pto_rotation = None, Ax = 0., Ay = 0., Az = 0.):
+    def translate_to(self, ptos, pto_ref, pto_ref_final):
+    
+        """
+        
+        .. _pto_translate_to:         
+                
+        **Synopsis:**
+            * Given a reference point and a final position for such point. Translate a point or list of points in a 3D space in a similar manner.
+        
+        **Args:**
+            * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            
+        **Optional parameters:**
+            * pto_ref: reference point
+            * pto_ref_final: final refence point position
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * See :ref:`addpto examples <ex_shapes_addpto>`
+            * See :ref:`example 3 <ex_points_ex3>`
+        
+        """    
+        
+        ix = pto_ref_final.x - pto_ref.x
+        iy = pto_ref_final.y - pto_ref.y
+        iz = pto_ref_final.z - pto_ref.z
+        
+        if type(ptos) is type([]):       
+            for v in ptos:
+                _pto = self._choices(v)
+                _pto.x = _pto.x + ix
+                _pto.y = _pto.y + iy
+                _pto.z = _pto.z + iz
+        else:
+            _pto = self._choices(ptos)
+            _pto.x = _pto.x + ix
+            _pto.y = _pto.y + iy
+            _pto.z = _pto.z + iz             
+            
+    def rotate(self, ptos, pto_rotation, Ax = 0., Ay = 0., Az = 0.):
     
         """
         
         .. _pto_rotate:         
                 
         **Synopsis:**
-            * Rotate a point of list of points in a 3D space respect an oringin point
+            * Rotate a point of list of points in a 3D space respect an origin point
         
         **Args:**
             * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            * pto_rotation: center point of rotation
             
         **Optional parameters:**
-            * pto_rotation = None: center point of rotation
             * Ax = 0.: yaw angle in degrees to turn respect axis X
             * Ay = 0.: pitch angle in degrees to turn respect axis Y
             * Az = 0.: roll angle in degrees to turn respect axis Z
@@ -298,6 +346,7 @@ class _points(object):
         .. note::
         
             * See :ref:`addpto examples <ex_shapes_addpto>`
+            * See :ref:`example 3 <ex_points_ex3>`
         
         """
         def _rotation_matrix(Ax,Ay,Az):
@@ -312,13 +361,14 @@ class _points(object):
         def _rotate(self,_pto,pto_rotation,R):
             #Tranlate to oringin
             if type(pto_rotation) == self._type_of_point():
-                trans = pto_rotation - _pto
+                trans = pto_rotation
                 tx,ty,tz = trans.x,trans.y,trans.z
                 self.translate(_pto, x = tx, y = ty, z = tz)
             else:
                 self.parent.error("Origing point in translate not a point")
             #Rotate
             x, y, z = _pto.x, _pto.y, _pto.z
+            
             _pto.x = x * R[0,0] + y * R[0,1] + z * R[0,2]
             _pto.y = x * R[1,0] + y * R[1,1] + z * R[1,2]
             _pto.z = x * R[2,0] + y * R[2,1] + z * R[2,2]
@@ -329,13 +379,14 @@ class _points(object):
             
         ### Check lists
         R = _rotation_matrix(Ax,Ay,Az)
+        
         if type(ptos) is type([]):       
             for v in ptos:
                 _pto = self._choices(v)
-                self._rotate(self,_pto,pto_rotation,R)
+                _rotate(self,_pto,pto_rotation,R)
         else:
             _pto = self._choices(ptos)
-            self._rotate(self,_pto,pto_rotation,R)            
+            _rotate(self,_pto,pto_rotation,R)            
         
     def copy(self, ptos, alias_prefix = "", alias_sufix = ""):
     
@@ -360,6 +411,7 @@ class _points(object):
         
             * If alias_sufix and alias_prefix is "", an empty alias for each copied point is return
             * See :ref:`addpto examples <ex_shapes_addpto>`
+            * See :ref:`example 3 <ex_points_ex3>`
         
         """    
         lst_out = []
@@ -391,8 +443,147 @@ class _points(object):
         
         return lst_out
         
+    def draw_points(self, ptos = None, mark_radius = 1, color = "", label = "#marker_points", layer = -1e-10):
+    
+        """
+        .. _draw_points:         
+                
+        **Synopsis:**
+            * Draw a list of points with a marker
+            * If no list of points is given, all the points are draw with a marker
+            
+        **Args:**
+            * ptos = None: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            
+        **Optional parameters:**
+            * mark_radius = 1: scale of marker size
+            * color = "": color of the marker
+            * label = "#marker_points": label added to the markers
+            * layer = -1e-10: layer were the markers belong
+            
+        **Returns:**
+            * None
+            
+        .. note::
+        
+            * See :ref:`example 3 <ex_points_ex3>`
+        
+        """ 
+        if ptos is None:
+            ptos = self._all_points()
+            
+        self._draw_list_points(ptos, mark_radius = mark_radius, \
+                               color = color, label = label, layer = layer)
+        
+        return None
+    
+    ###################################### Internal
+    def _all_points(self):
+        ### Return a list with all points
+        lst_out = []        
+        
+        ### Check all points
+        for key, value in self.points._data.iteritems():
+            if key[0] == "#":
+                p = self.point(key)
+                lst_out.append(p.id)
+               
+        ### Call all shapes
+        for key, value in self.parent.shp.shapes._data.iteritems():
+            if key[0] == "#":
+                for p in self.parent.shp[key].addpto:
+                    if p.id in lst_out:
+                        pass
+                    else:
+                        lst_out.append(p)
+        
+        return lst_out
+        
+    def _canavas_size(self, ptos):
+        ### Return canavas cube from a list of points [[max_x,_min_x],[max_y,_min_y],[max_z,_min_z]]
+                
+        def _max_min_canavas(_canavas, x, y, z):
+            # [[max_x,min_x],[max_y,min_y],[max_z,min_z]] = self._canavas
+            #_canavas = [[0.,0.],[0.,0.],[0.,0.]]
+            
+            if x > _canavas[0][1]: _canavas[0][1] = x
+            if x < _canavas[0][0]: _canavas[0][0] = x
+            
+            if y > _canavas[1][1]: _canavas[1][1] = y
+            if y < _canavas[1][0]: _canavas[1][0] = y
+
+            if z > _canavas[2][1]: _canavas[2][1] = z
+            if z < _canavas[2][0]: _canavas[2][0] = z        
+            
+            return _canavas        
+        
+        start = True
+        # Iterate list of points
+        if type(ptos) is type([]): 
+            for pto in ptos:
+                p = self._choices(pto)
+                if start:
+                    start = False
+                    _canavas = [[p.x,p.x],[p.y,p.y],[p.z,p.z]]
+                else:
+                    _canavas = _max_min_canavas(_canavas, p.x, p.y, p.z)
+        else:
+            p = self._choices(ptos)
+            if start:
+                start = False
+                _canavas = [[p.x,p.x],[p.y,p.y],[p.z,p.z]]
+            else:
+                _canavas = _max_min_canavas(_canavas, p.x, p.y, p.z)                    
+        
+        ### Get values
+        [[min_x,max_x],[min_y,max_y],[min_z,max_z]] = _canavas
+        
+        ### Space lengths
+        size_x, size_y, size_z = max_x - min_x, max_y - min_y, max_z - min_z
+        
+        ### Max length
+        max_size = abs(size_x)
+        if abs(size_y) > max_size: max_size = size_y
+        if abs(size_z) > max_size: max_size = size_z
+        
+        return size_x, size_y, size_z, max_size, _canavas
+        
+    def _draw_list_points(self, ptos, mark_radius = 1, color = "", label = "#marker_points", layer = -1e-10):
+        ### Draw markers for a list of points
+        
+        # Find max sizes of drawing. Canavas
+        size_x, size_y, size_z, max_size, _canavas = self._canavas_size(ptos)
+        s = max_size / 200.
+        s_mark_radius = mark_radius * s
+        
+        # draw marker
+        def _draw_marker(self, pto, mark_radius, color, layer, label):
+            if pto.id is None: return
+            x,y,z = pto.x,pto.y,pto.z
+            p1 = self.auxpoint(x=x+mark_radius, y=y, z=z, layer = layer)
+            p2 = self.auxpoint(x=x-mark_radius, y=y, z=z, layer = layer)
+            l = self.parent.shp.line(p1,p2,color=color,layer=layer)
+            l.addlabel = label            
+            p1 = self.auxpoint(x=x, y=y+mark_radius, z=z, layer = layer)
+            p2 = self.auxpoint(x=x, y=y-mark_radius, z=z, layer = layer)
+            l = self.parent.shp.line(p1,p2,color=color,layer=layer)
+            l.addlabel = label
+            p1 = self.auxpoint(x=x, y=y, z=z+mark_radius, layer = layer)
+            p2 = self.auxpoint(x=x, y=y, z=z-mark_radius, layer = layer)
+            l = self.parent.shp.line(p1,p2,color=color,layer=layer)
+            l.addlabel = label               
+            
+        # Iterate list of points
+        if type(ptos) is type([]): 
+            for pto in ptos:
+                _p = self._choices(pto)
+                _draw_marker(self, _p, s_mark_radius, color, layer, label)
+        else:
+            _p = self._choices(ptos)
+            _draw_marker(self, _p, s_mark_radius, color, layer, label)                 
+        
 #################################################        
-#################################################        
+################# Point object ##################        
 #################################################        
         
 class _point(object):

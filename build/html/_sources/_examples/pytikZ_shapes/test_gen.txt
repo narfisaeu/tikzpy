@@ -173,20 +173,4 @@ Drawing created with the following pyTikZ code:
 
 .. literalinclude:: /_examples/pytikZ_shapes/test_shp_grid.py
     :linenos:
-    :language: python  
-
-Example 8 - Bitmap shape options
---------------------------------
-.. _ex_shapes_bitmap:
-
-See the following example:    
-
-    .. image:: test_shp_bitmap.tikz.png
-       :scale: 100 %
-       :align: center
-       
-Drawing created with the following pyTikZ code:
-
-.. literalinclude:: /_examples/pytikZ_shapes/test_shp_bitmap.py
-    :linenos:
-    :language: python       
+    :language: python     

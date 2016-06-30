@@ -18,9 +18,9 @@ class _canavas(object):
     
     """
         For the furture:
-            * Move, rototate, scale ...
-            * Resume of unique points
-            * General shape properties
+            * Move, rotate, scale ... -- Discarded, is shapes do it with group of points
+            * Resume of unique points -- May 2016
+            * General shape properties -- Discarded, is shapes do it with group of points
             * Max, min and canavas points
     """    
     

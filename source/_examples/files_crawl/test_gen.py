@@ -6,14 +6,14 @@ import pyTikZ.files_crawl as libfile
 files = libfile.load_obj_files()
 
 ### Choose a folder
-folder = r"../images"
+folder = r"../pytikZ_shapes"
 
 ### Crawl the folder
-file_obj1 = libfile.read_folder_list_files(folder, "jpg", prefix = "2", max_recursive_level = 0, data = False, case_sensitive = False)
+file_obj1 = libfile.read_folder_list_files(folder, "png", prefix = "test_shp_f", max_recursive_level = 0, data = False, case_sensitive = False)
 print file_obj1
 
 ### Crawl the folder for prefix bird
-file_obj2 = libfile.read_folder_list_files(folder, "jpg", prefix = "bird", max_recursive_level = 0, data = False, case_sensitive = False)
+file_obj2 = libfile.read_folder_list_files(folder, "png", prefix = "test_shp_c", max_recursive_level = 0, data = False, case_sensitive = False)
 
 print file_obj2
 
@@ -34,7 +34,7 @@ for x in file_obj3:
 file_obj4 = libfile.load_obj_files()
 
 ### Add single path
-path = r"../images/buildingg.jpg"
+path = r"../pytikZ_shapes/test_shp_addpto.tikz.png"
 
 ### If the file does not exist will not be add
 idx = file_obj4.set_by_path(path)
@@ -45,7 +45,7 @@ else:
     print "If the file exist will be add: %s" % file_obj4[idx].path
 
 ### Add single path
-path = r"../images/building.jpg"
+path = r"../pytikZ_shapes/test_shp_addpto.tikz.png"
 
 ### If the file exist will be add
 idx = file_obj4.set_by_path(path)

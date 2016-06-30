@@ -52,21 +52,3 @@ Drawing created with the following pyTikZ code:
 .. literalinclude:: /_examples/pytikZ_points/test_pto_03_view_points.py
     :linenos:
     :language: python  
-    
-Example 4 - Read csv file with points
--------------------------------------
-.. _ex_points_ex4:
-
-Points can be visualized, translated and rotated
-
-See the following example:    
-
-    .. image:: test_pto_04_read_points.tikz.png
-       :scale: 100 %
-       :align: center
-       
-Drawing created with the following pyTikZ code:
-
-.. literalinclude:: /_examples/pytikZ_points/test_pto_04_read_points.py
-    :linenos:
-    :language: python     

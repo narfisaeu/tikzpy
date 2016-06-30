@@ -1,6 +1,7 @@
 #!/usr/bin/python 
 # FLC 2013
 
+import os
 import math
 import numbers
 import obj_data
@@ -36,21 +37,25 @@ class _shapes(object):
     
     """
         For the furture:
-            * Grid rectangle
-            * Rectangle given by two corners
-            * Parabola given by three points        
-            * Add mapbits, images
-            * Add translate of shps -- April 2016
-            * Add scale of shps
-            * Add rotation of shps -- April 2016
-            * Add copy of shps -- April 2016
-            * Review labels -- May 2016
-            * Add opacity, section 21
-            * Add patterns
-            * Check fill examples
-            * Add decorations (review in type)
-            * .add_arc(angle_in, angle_out, radius ) -- arc (90:-90:.5)
+            
+            * Add scale group of shapes shps
+            * .add_arc(angle_in, angle_out, radius ) -- arc (90:-90:.5) in a line
             * add_cycle in a line
+            * Shade options
+            * Check arrows and example
+            * Add opacity/opacity, section 21
+            
+            * Add mapbits, images -- July 2016 (unclear the scale and units)
+            * Add decorations (review in type) -- April 2016
+            * Check fill examples -- April 2016
+            * Add patterns into fill -- April 2016
+            * Add translate of shps -- April 2016
+            * Add rotation of shps -- April 2016
+            * Add copy of shps -- April 2016            
+            * Review labels -- May 2016
+            * Grid rectangle -- May 2016 (should be done as an assembly of lines, to be rotable)
+            * Rectangle given by two corners --  (should be done as an assembly of lines, to be rotable)
+            * Parabola given by three points -- Discarded                   
     """
     
     def __init__(self, parent):
@@ -104,7 +109,7 @@ class _shapes(object):
             * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
             * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
             * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
-            * fill = "": fill texture of the line (see fill examples)
+            * fill = "": fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
             
         **Returns:**
             * A line shape object
@@ -124,7 +129,7 @@ class _shapes(object):
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
         :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
-        :ivar fill: set/get fill texture of the line (see fill examples)  
+        :ivar fill: set/get fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
         
         :ivar addpto: set or add a new points to the line. Get a list of points that form the line. See :ref:`addpto examples <ex_shapes_addpto>`
            
@@ -155,10 +160,10 @@ class _shapes(object):
             
         **Optional parameters:**
             * layer = 0: layer member where the shape belongs
-            * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
-            * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
-            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
-            * fill = "": fill texture of the line (see fill examples)
+            * thick = "": path thickness (see :ref:`thick examples <ex_shapes_thick>`)
+            * type = "": type of path (see :ref:`type examples <ex_shapes_type>`)
+            * color = "": color of the path (see :ref:`colors examples <ex_shapes_color>`)
+            * fill = "": fill texture of the path (see :ref:`fill examples <ex_shapes_fill>`)
             
         **Returns:**
             * A path shape object
@@ -178,7 +183,7 @@ class _shapes(object):
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
         :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
-        :ivar fill: set/get fill texture of the line (see fill examples)       
+        :ivar fill: set/get fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
         
         :ivar addpto: set or add a new points to the line. Get a list of points that form the line. See :ref:`addpto examples <ex_shapes_addpto>`
         
@@ -216,7 +221,7 @@ class _shapes(object):
             * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
             * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
             * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
-            * fill = "": fill texture of the line (see fill examples)
+            * fill = "": fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
             
         **Returns:**
             * A circle shape object
@@ -236,7 +241,7 @@ class _shapes(object):
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
         :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
-        :ivar fill: set/get fill texture of the line (see fill examples)       
+        :ivar fill: set/get fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
                 
         .. note::
         
@@ -272,7 +277,7 @@ class _shapes(object):
             * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
             * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
             * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
-            * fill = "": fill texture of the line (see fill examples)
+            * fill = "": fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
             
         **Returns:**
             * An arc shape object
@@ -309,7 +314,7 @@ class _shapes(object):
         if thick != "": item.thick = thick
         if type != "":  item.type = type
         if color != "": item.color = color
-        if fill != "": item.fill = fil        
+        if fill != "": item.fill = fill      
         
         return item        
     
@@ -327,7 +332,7 @@ class _shapes(object):
         **Optional parameters:**
             * layer = 0: layer member where the shape belongs
             * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
-            * fill = "": fill texture of the line (see fill examples)
+            * fill = "": fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
             * rotate_text = 0.: float number in degrees of text rotation
             * position = "": "above" , "below" , "left" , "right", "above left" , "below left" , "above right" , "below right"
             * align = "": "left" , "center" , "right"
@@ -346,7 +351,7 @@ class _shapes(object):
         :ivar comment: multifunctional text field
         
         :ivar color: set/get color of the text (see :ref:`colors examples <ex_shapes_color>`)
-        :ivar fill: set/get fill texture of the text (see fill examples)       
+        :ivar fill: set/get fill texture of the text (see :ref:`fill examples <ex_shapes_fill>`)
         
         :ivar text: set/get text label
         :ivar rotate_text: float number in degrees of text rotation
@@ -368,12 +373,127 @@ class _shapes(object):
         if position != "": item.position = position       
         if align != "": item.align = align       
                
-        return item     
+        return item   
+
+    def bitmap(self, pto, bitmap_path, width = None, height = None, layer = 0, color = "", fill = "", rotate_text = 0, position = "", align = ""):
+        """
+        .. _shapes_bitmap:         
+                
+        **Synopsis:**
+            * Add a bitmap or image file. Referenced by a point position using a node wrapper.
+        
+        **Args:**
+            * pto: point reference for the bitmap node
+            * bitmap_path: path to bitmap or image file (jpg, png, pdf)
+            
+        **Optional parameters:**
+            * width = None: image width, if just width or height is supply the aspect ratio is mantain (in cm)
+            * height = None: image height, if just width or height is supply the aspect ratio is mantain (in cm)
+            * layer = 0: layer member where the shape belongs
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
+            * fill = "": fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
+            * rotate_text = 0.: float number in degrees of image rotation
+            * position = "": "above" , "below" , "left" , "right", "above left" , "below left" , "above right" , "below right"
+            * align = "": "left" , "center" , "right"
+            
+        **Returns:**
+            * An bitmap shape object
+           
+        **Chracteristics of a shape bitmap object**
+        
+        :ivar id: get unique id of the shape object
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane and viewer
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
+        :ivar comment: multifunctional bitmap field
+        
+        :ivar color: set/get color of the bitmap (see :ref:`colors examples <ex_shapes_color>`)
+        :ivar fill: set/get fill texture of the bitmap (see :ref:`fill examples <ex_shapes_fill>`)
+        
+        :ivar text: set/get bitmap path (windows backslash is replace by slash)
+        :ivar rotate_text: float number in degrees of bitmap rotation
+        :ivar position: options: "above" , "below" , "left" , "right", "above left" , "below left" , "above right" , "below right"
+        :ivar align: options: "left" , "center" , "right"    
+        
+        .. note::
+        
+            * See :ref:`bitmap examples <ex_shapes_bitmap>`
+            
+        """      
+        
+        item = self._additem("bitmap", layer = layer)          
+        item.text = self._build_bitmap_text(bitmap_path, width, height)
+        item.addpto = pto
+        if color != "": item.color = color
+        if fill != "": item.fill = fill          
+        if rotate_text != 0.: item.rotate_text = rotate_text         
+        if position != "": item.position = position       
+        if align != "": item.align = align       
+               
+        return item          
     
-    def grid(self, step, xstep = 0, ystep = 0, layer = 0):
+    def _build_bitmap_text(self, bitmap_path, width, height):
+        ### Build a bitmap text
+        opt = ""
+        if width is not None: opt = "width=%.4fcm," % width
+        if height is not None: opt = "height=%.4fcm" % height
+        if not os.path.isfile(bitmap_path):
+            self.error("Bitmap file does not exist", ref = "_build_bitmap_text")
+        txt = r"\includegraphics[%s]{%s}" % (opt, bitmap_path.replace("\\", r"/"))
+        return txt
+    
+    def grid(self, corner1_pto, corner2_pto, xstep = 1, ystep = 1, layer = 0, thick = "help lines", type = "", color = ""):
+        """
+        .. _shapes_grid:         
+                
+        **Synopsis:**
+            * Add a renctangular grid defined by the two opposite corner points
+        
+        **Args:**
+            * corner1_pto: point of corner 1
+            * corner2_pto: point of corner 2
+            
+        **Optional parameters:**
+            * xstep = 1: grid step in x direction
+            * ystep = 1: grid step in y direction        
+            * layer = 0: layer member where the shape belongs
+            * thick = "help lines": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+            * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
+            
+        **Returns:**
+            * A grid shape object
+           
+        **Chracteristics of a shape line object**
+        
+        :ivar id: get unique id of the shape object
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane and viewer
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
+        :ivar comment: multifunctional text field
+        
+        :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+        :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
+        :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)   
+                
+        .. note::
+            
+            * The grid cannot be rotated
+            * See :ref:`grid examples <ex_shapes_grid>`
+        
+        """     
         
         item = self._additem("grid", layer = layer)          
-        item.step = [step, xstep, ystep]
+        item.step = [1, xstep, ystep]
+        item.addpto = corner1_pto
+        item.addpto = corner2_pto     
+        if thick != "": item.thick = thick
+        if type != "":  item.type = type
+        if color != "": item.color = color      
         
         return item 
     
@@ -386,7 +506,7 @@ class _shapes(object):
         
         return item       
         
-        
+    ######################### Translation, copy, rotate  
     def copy(self, shps):
         
         """
@@ -764,7 +884,48 @@ class _shapes(object):
             return True
         else:
             #log("Inconsistent")            
-            return False          
+            return False  
+
+    ######################### Builder
+    def _types_patterns(self):
+        
+        v = ["horizontal lines", "vertical lines", "north east lines", "north west lines", "grid", \
+            "crosshatch", "dots", "crosshatch dots", "fivepointed stars", "sixpointed stars", "bricks", "checkerboard"]
+        
+        return v
+    def pattern_build(self, type_pattern, color = ""):
+        """
+        
+        .. _shapes_pattern_build:   
+                
+        **Synopsis:**
+            * Builds a type of pattern fill object that can be set to the fill property
+        
+        **Args:**
+            * type_pattern: type of pattern
+        
+        **Optional parameters:**
+            * color="": color of pattern (see :ref:`colors examples <ex_shapes_color>`)
+                        
+        **Returns:**
+            * A pattern object that can be set to the fill property
+            
+        .. note::
+            
+            * Possible types: horizontal lines, vertical lines, north east lines, north west lines, grid, crosshatch, dots, crosshatch dots, fivepointed stars, sixpointed stars, bricks, checkerboard
+            * See :ref:`fill examples <ex_shapes_fill>`
+        
+        """        
+        _type_pattern = str(type_pattern).lower().strip()
+        if _type_pattern not in self._types_patterns():
+            self.error("Type of pattern not found")
+        
+        _color = str(color).lower().strip()
+        self.parent.col[_color] = _color
+
+        lst = ["#pat#", _type_pattern, _color]
+        
+        return lst        
             
 class _shape(object):
    
@@ -825,7 +986,7 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            if self.fill != "": opt += " fill= " + self.fill + " ,"
+            if self.fill != "": opt += self._construct_fill() + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -848,7 +1009,7 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            if self.fill != "": opt += " fill= " + self.fill + " ,"
+            if self.fill != "": opt += self._construct_fill() + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -869,7 +1030,7 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            if self.fill != "": opt += " fill= " + self.fill + " ,"
+            if self.fill != "": opt += self._construct_fill() + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -888,7 +1049,7 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            if self.fill != "": opt += " fill= " + self.fill + " ,"
+            if self.fill != "": opt += self._construct_fill() + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -908,10 +1069,10 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            if self.fill != "": opt += self.fill + " ,"
+            #if self.fill != "": opt += self._construct_fill() + " ,"
             if self.step[2] != 0: opt += "ystep=%.4f ," % self.step[2]
             if self.step[1] != 0: opt += "xstep=%.4f ," % self.step[1]
-            if self.step[0] != 0: opt += "step=%.4f ," % self.step[0]            
+            #if self.step[0] != 0: opt += "step=%.4f ," % self.step[0]            
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -919,12 +1080,12 @@ class _shape(object):
                 for ii in range(0,2):
                     pto = self.addpto[ii]
                     ptos += "(%.4f%s,%.4f%s,%.4f%s) grid " % (pto.x, units, pto.y, units, pto.z, units)
-                if len(ptos) > 0: ptos = ptos[:-11]
+                if len(ptos) > 0: ptos = ptos[:-6]
             else:
                 log("Less than two point for the grid %s" % self.id)            
             
             str = r"\draw %s %s;" % (opt, ptos)   
-
+            print str
         if self.action == "text":
 
             opt = ""
@@ -932,7 +1093,31 @@ class _shape(object):
             #if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             #if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            if self.fill != "": opt += self.fill + " ,"   
+            if self.fill != "": opt += self._construct_fill() + " ,"   
+            if self.position != "": opt += self.position + " ,"   
+            if self.align != "": opt += "align=" + self.align + " ,"            
+            if self.rotate_text != 0.:  opt += "rotate=%.3f" %  self.rotate_text+ " ,"               
+            if len(opt) > 0: opt = "[" + opt[:-2] + "] "
+            
+            ptos = ""
+            if len(self.addpto) >= 1:
+                for ii in range(0,1):
+                    pto = self.addpto[ii]
+                    ptos += r"(%.4f%s,%.4f%s,%.4f%s) " % (pto.x, units, pto.y, units, pto.z, units)
+                #if len(ptos) > 0: ptos = ptos[:]
+            else:
+                log("Less than one point for the node %s" % self.id)            
+            
+            str = r"\node %s at %s {%s};" % (opt, ptos,self.text)
+        
+        if self.action == "bitmap":
+
+            opt = ""
+            #if self.arrow != "": opt += self.arrow.replace("##units##",units) + " ,"
+            #if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
+            #if self.type != "": opt += self.type.replace("##units##",units) + " ,"
+            if self.color != "": opt += self._color_build() + " ,"
+            if self.fill != "": opt += self._construct_fill() + " ,"   
             if self.position != "": opt += self.position + " ,"   
             if self.align != "": opt += "align=" + self.align + " ,"            
             if self.rotate_text != 0.:  opt += "rotate=%.3f" %  self.rotate_text+ " ,"               
@@ -956,7 +1141,7 @@ class _shape(object):
             if self.thick != "": opt += self.thick.replace("##units##",units) + " ,"
             if self.type != "": opt += self.type.replace("##units##",units) + " ,"
             if self.color != "": opt += self._color_build() + " ,"
-            if self.fill != "": opt += self.fill + " ,"
+            if self.fill != "": opt += self._construct_fill() + " ,"
             if len(opt) > 0: opt = "[" + opt[:-2] + "] "
             
             ptos = ""
@@ -1144,9 +1329,41 @@ class _shape(object):
     
     @fill.setter
     def fill(self, value):
-        val = str(value).lower().strip()
-        self.parent.parent.col[val] = val
-        self.parent.shapes[self._key]["fill"] = val
+        if type(value) == type([]):
+            if value[0] == "#pat#":
+                ### Pattern case
+                self.parent.shapes[self._key]["fill"] = value
+            elif value[0] == "#sha#":
+                ### Shade case
+                self.parent.shapes[self._key]["fill"] = value                
+            else:
+                self.parent.error("Wrong fill type, %s" % value)
+        else:
+            ### Color type
+            val = str(value).lower().strip()
+            self.parent.parent.col[val] = val
+            self.parent.shapes[self._key]["fill"] = val
+    
+    def _construct_fill(self):
+        
+        value = self.parent.shapes[self._key]["fill"]
+        _out = ""
+        
+        if type(value) == type([]):
+            if value[0] == "#pat#":
+                ### Pattern case
+                [nn, _type_pattern, _color] = value
+                if _color != "": _out = "pattern color=%s ," % self.parent.parent.col[_color]
+                _out += "pattern=%s" % _type_pattern
+            elif value[0] == "#sha#":
+                ### Shade case
+                pass
+            else:
+                self.parent.error("Wrong fill type, %s" % value)
+        else:        
+            _out = " fill= " + self.parent.parent.col[value] + " ,"
+        
+        return _out
     
     @property
     def action(self):
@@ -1210,7 +1427,7 @@ class _shape(object):
         
     @step.setter
     def step(self, value):
-        if isinstance(value,[]):
+        if type(value) == type([]):
             self.parent.shapes[self._key]["step"] = value
         else:
             log("Step is not a list")

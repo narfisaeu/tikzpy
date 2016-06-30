@@ -5,6 +5,7 @@ import math
 import numpy as np
 import numbers
 import obj_data
+import csv
 
 class _points(object):
 
@@ -47,8 +48,9 @@ class _points(object):
     """
         Future functions:
             * Export points to csv and txt file (separate by ;)
-            * Import points to csv and txt file (separate by ;)
-            * Add scale of ptos
+            * Assign to list of points, x, y, z independently
+            * Import points to csv and txt file (separate by ;)  -- July 2016
+            * Add scale of ptos -- July 2016
             * Translation of a point function -- April 2016
             * Rotation of a point function -- April 2016
             * Show points -- April 2016
@@ -329,7 +331,7 @@ class _points(object):
         .. _pto_rotate:         
                 
         **Synopsis:**
-            * Rotate a point of list of points in a 3D space respect an origin point
+            * Rotate a point or list of points in a 3D space respect an origin point
         
         **Args:**
             * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
@@ -386,7 +388,63 @@ class _points(object):
                 _rotate(self,_pto,pto_rotation,R)
         else:
             _pto = self._choices(ptos)
-            _rotate(self,_pto,pto_rotation,R)            
+            _rotate(self,_pto,pto_rotation,R)  
+
+    def scale(self, ptos, Sx = 1., Sy = 1., Sz = 1., pto_origin= None):
+    
+        """
+        .. _pto_scale:         
+                
+        **Synopsis:**
+            * Scale a point or list of points in a 3D space respect an origin point
+        
+        **Args:**
+            * ptos: multiple points. Can be set as a point, a list o points, an alias or a list of alias. See :ref:`addpto examples <ex_shapes_addpto>`
+            
+        **Optional parameters:**
+            * Sx = 1.: scale in axis X
+            * Sy = 1.: scale in axis Y
+            * Sz = 1.: scale in axis Z
+            * pto_origin = None: center point of scaling, if None origin is global origin          
+            
+        **Returns:**
+            * None
+            
+        .. note::
+        
+            * See :ref:`addpto examples <ex_shapes_addpto>`
+            * See :ref:`example 4 <ex_points_ex4>`
+        
+        """
+            
+        def _scale(self,_pto,pto_origin,Sx,Sy,Sz):
+            #Tranlate to oringin
+            if pto_origin is not None:
+                if type(pto_origin) == self._type_of_point():
+                    trans = pto_origin
+                    tx,ty,tz = trans.x,trans.y,trans.z
+                    self.translate(_pto, x = tx, y = ty, z = tz)
+                else:
+                    self.parent.error("Origing point in translate not a point")
+            #Scale
+            x, y, z = _pto.x, _pto.y, _pto.z
+            
+            _pto.x = x * Sx
+            _pto.y = y * Sy
+            _pto.z = z * Sz
+            
+            #Un-translate to origin
+            if pto_origin is not None:
+                if type(pto_origin) == self._type_of_point():
+                    self.translate(_pto, x = -tx, y = -ty, z = -tz)
+        
+        if type(ptos) is type([]):       
+            for v in ptos:
+                _pto = self._choices(v)
+                _scale(self,_pto,pto_origin,Sx,Sy,Sz)
+        else:
+            _pto = self._choices(ptos)
+            _scale(self,_pto,pto_origin,Sx,Sy,Sz)           
         
     def copy(self, ptos, alias_prefix = "", alias_sufix = ""):
     
@@ -477,6 +535,63 @@ class _points(object):
         
         return None
     
+    def read_list_csv(self, file_path, delimiter = None):
+    
+        """
+        .. _read_list_csv:         
+                
+        **Synopsis:**
+            * Read list of points in csv file
+            * Rows layout: x, y, z, alias, layer
+            
+        **Args:**
+            * file_path: Full path to csv file.
+            
+        **Optional parameters:**
+            * delimiter = None: columns separator
+            
+        **Returns:**
+            * List of points ids ptos
+            
+        .. note::
+        
+            * See :ref:`example 4 <ex_points_ex4>`
+        
+        """
+        
+        alias = None
+        layer = 0
+        ptos = []
+        
+        with open(file_path, 'rb') as csvfile:
+            dialect = csv.Sniffer().sniff(csvfile.read(1024))
+            csvfile.seek(0)
+            reader = csv.reader(csvfile, dialect)
+            # ... process CSV file contents here ...
+            for row in reader:
+                if len(row) == 2:
+                    [x, y] = row
+                    z = 0
+                elif len(row) == 3:
+                    [x, y, z] = row
+                elif len(row) == 4:
+                    [x, y, z, alias] = row
+                elif len(row) == 5:
+                    [x, y, z, alias, layer] = row
+                else:
+                    self.parent.error("CSV file, incorrect number of rows.", ref = "read_list_csv")
+                    
+                # Create a point
+                if alias is not None:
+                    p = self.pto(x, y, z, layer=layer, alias=alias)
+                else:
+                    p = self.pto(x, y, z, layer=layer)
+                    
+                # List of points
+                ptos.append(p.id)
+        
+        return ptos
+        
     ###################################### Internal
     def _all_points(self):
         ### Return a list with all points

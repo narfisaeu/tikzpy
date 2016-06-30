@@ -35,6 +35,18 @@ class pytikz(object):
        :ivar scale_text=1.: scale value for the nodes text the TikZ drawing
 
     """   
+    
+    """
+        For the furture:
+            * Add 3D view
+
+        Install latex ubuntu:
+            * sudo apt-get install texlive-full
+            * sudo apt-get install xzdec
+            * sudo tlmgr install pgf
+            * sudo tlmgr install tikz-cd
+    
+    """    
    
     def __init__(self):      
         
@@ -93,7 +105,7 @@ class pytikz(object):
             
         .. note::
             
-            * Dependent on the local latex instalation, use latex to dvi and dvips to eps
+            * Dependent on the local latex instalation, use latex to dvi and dvips to eps (ubuntu: apt-get install texlive-full / windows: miktex.org)
             * See example
         
         """  
@@ -109,12 +121,18 @@ class pytikz(object):
         
         ### Convert  
         lst = ["latex", route_tik]
-        p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
-        out, err = p.communicate()
+        if os.name == "nt":
+            p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+            out, err = p.communicate()
+        else:
+            subprocess.check_call(lst)
         
         lst = ["dvips", "-o", route_eps, route_dvi]
-        p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
-        out, err = p.communicate()        
+        if os.name == "nt":
+            p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+            out, err = p.communicate() 
+        else:
+            subprocess.check_call(lst)       
         
         #if as_jpg:
         #   ### Uses PIL and requeres ghostscript
@@ -150,7 +168,7 @@ class pytikz(object):
             
         .. note::
             
-            * Dependent on the local latex instalation, use **pdflatex** to generate a pdf
+            * Dependent on the local latex instalation, use **pdflatex** to generate a pdf (ubuntu: apt-get install texlive-full / windows: miktex.org)
             * To save pdfs as png files requires **ImageMagick** to be installed, uses convert command
             * See example
         
@@ -166,14 +184,20 @@ class pytikz(object):
         
         ### Convert  
         lst = ["pdflatex", route_tik]
-        p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
-        out, err = p.communicate()
+        if os.name == "nt":
+            p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+            out, err = p.communicate()
+        else:
+            subprocess.check_call(lst)
         
         ### Create png
         if as_png:     
             lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
-            p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
-            out, err = p.communicate()
+            if os.name == "nt":
+                p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+                out, err = p.communicate()
+            else:
+                subprocess.check_call(lst)
             
         return route_pdf
         

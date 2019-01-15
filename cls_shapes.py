@@ -21,12 +21,14 @@ class _shapes(object):
     :synopsis: Allows to add 2D shapes using points
     
     :properties:
-        * Possible shapes
+        * Available shapes
             * Line between two points. See :ref:`shp.line <shapes_line>`
             * Path of multiple points. See :ref:`shp.path <shapes_path>`
             * Circle given by center and radius. See :ref:`shp.circle <shapes_circle>`
             * Arc given by starting point, radius and angles. See :ref:`shp.arc <shapes_arc>`
+            * Arc given by center, radius and angles. See :ref:`shp.arc_by_center <shapes_arc_by_center>`
             * Text label. See :ref:`shp.text <shapes_text>`
+            * Add bitmap. See :ref:`shp.bitmap <shapes_bitmap>`
         * Shapes allow to set labels (see labels section). See :ref:`labels <labels_cls>`
     
     **Chracteristics of a shape (shp) object**
@@ -42,10 +44,15 @@ class _shapes(object):
             * .add_arc(angle_in, angle_out, radius ) -- arc (90:-90:.5) in a line
             * add_cycle in a line
             * Shade options
-            * Check arrows and example
             * Add opacity/opacity, section 21
-            
-            * Add mapbits, images -- July 2016 (unclear the scale and units)
+            * Add opacity as optional variable karg
+            * Add zorder and list of labels to shapes functions
+            * Zorder divided in two: internal (to use in 3D & render, valid from the second decimal) & external (only valid until the second decimal)
+            * Add render of surfaces
+            * Path limit of 500 points -- Sub divide in two paths
+            -------------- Done ------------------
+            * Check arrows and example -- July 2016
+            * Add mapbits, images -- July 2016
             * Add decorations (review in type) -- April 2016
             * Check fill examples -- April 2016
             * Add patterns into fill -- April 2016
@@ -55,7 +62,8 @@ class _shapes(object):
             * Review labels -- May 2016
             * Grid rectangle -- May 2016 (should be done as an assembly of lines, to be rotable)
             * Rectangle given by two corners --  (should be done as an assembly of lines, to be rotable)
-            * Parabola given by three points -- Discarded                   
+            * Parabola given by three points -- Discarded     
+            * arc_by_center -- August 2017
     """
     
     def __init__(self, parent):
@@ -124,8 +132,8 @@ class _shapes(object):
         :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
-        :ivar arrow: set/get arrow parameters (see arrows examples)
-        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar arrow: set/get arrow parameters (see :ref:`arrow examples <ex_shapes_arrow>`)
+        :ivar arrow_build(start,end,scale): arrow parameter (see :ref:`arrow examples <ex_shapes_arrow>`)
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
         :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
@@ -178,8 +186,8 @@ class _shapes(object):
         :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
-        :ivar arrow: set/get arrow parameters (see arrows examples)
-        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar arrow: set/get arrow parameters (see :ref:`arrow examples <ex_shapes_arrow>`)
+        :ivar arrow_build(start,end,scale): arrow parameter (see :ref:`arrow examples <ex_shapes_arrow>`)
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
         :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
@@ -203,7 +211,7 @@ class _shapes(object):
 
     def rectangle(self, layer = 0):
         
-        return self._additem("rectangle", layer = layer)   
+        return self._additem("rectangle", layer = layer)
 
     def circle(self, pto, radius, layer = 0, thick = "", type = "", color = "", fill = ""):       
         """
@@ -236,8 +244,8 @@ class _shapes(object):
         :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
-        :ivar arrow: set/get arrow parameters (see arrows examples)
-        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar arrow: set/get arrow parameters (see :ref:`arrow examples <ex_shapes_arrow>`)
+        :ivar arrow_build(start,end,scale): arrow parameter (see :ref:`arrow examples <ex_shapes_arrow>`)
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
         :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
@@ -292,8 +300,8 @@ class _shapes(object):
         :ivar dellabel: set/get delete a shape label
         :ivar comment: multifunctional text field
         
-        :ivar arrow: set/get arrow parameters (see arrows examples)
-        :ivar arrow_build(start,end,scale): arrow parameter (see arrows examples)
+        :ivar arrow: set/get arrow parameters (see :ref:`arrow examples <ex_shapes_arrow>`)
+        :ivar arrow_build(start,end,scale): arrow parameter (see :ref:`arrow examples <ex_shapes_arrow>`)
         :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
         :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
         :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
@@ -316,7 +324,63 @@ class _shapes(object):
         if color != "": item.color = color
         if fill != "": item.fill = fill      
         
-        return item        
+        return item     
+
+    def arc_by_center(self, center_point, radius, start_angle, end_angle, layer = 0, thick = "", type = "", color = "", fill = ""):
+        """
+        .. _shapes_arc_by_center:         
+                
+        **Synopsis:**
+            * Add an arc defined by the center point, radius, start angle and end angle
+        
+        **Args:**
+            * center_point: starting point of the arc (given by id, alias or point object)
+            * radius: radius of the arc
+            * start_angle: start angle in degrees
+            * end_angle: end angle in degrees
+            
+        **Optional parameters:**
+            * layer = 0: layer member where the shape belongs
+            * thick = "": line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+            * type = "": type of line (see :ref:`type examples <ex_shapes_type>`)
+            * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
+            * fill = "": fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
+            
+        **Returns:**
+            * An arc shape object
+           
+        **Chracteristics of a shape arc object**
+        
+        :ivar id: get unique id of the shape object
+        :ivar action: get type of shape object
+        :ivar zorder: set/get z position respect the drawing plane and viewer
+        :ivar labels: get labels list that the shape is associated to
+        :ivar addlabel: set/get add a label or list of labels to the shape
+        :ivar dellabel: set/get delete a shape label
+        :ivar comment: multifunctional text field
+        
+        :ivar arrow: set/get arrow parameters (see :ref:`arrow examples <ex_shapes_arrow>`)
+        :ivar arrow_build(start,end,scale): arrow parameter (see :ref:`arrow examples <ex_shapes_arrow>`)
+        :ivar thick: set/get line thickness (see :ref:`thick examples <ex_shapes_thick>`)
+        :ivar type: set/get type of line (see :ref:`type examples <ex_shapes_type>`)
+        :ivar color: set/get color of the line (see :ref:`colors examples <ex_shapes_color>`)
+        :ivar fill: set/get fill texture of the line (see fill examples)       
+                
+        .. note::
+        
+            * See example of arcs
+        
+        """         
+        
+        # Angles in degrees
+        
+        x = center_point.x + (radius * math.cos(math.radians(start_angle)))
+        y = center_point.y + (radius * math.sin(math.radians(start_angle)))
+        z = center_point.z
+        
+        start_point = self.parent.pto.pto(x=x, y=y, z=z, layer=layer, alias='')
+        
+        return self.arc(start_point, radius, start_angle, end_angle, layer = layer, thick = thick, type = type, color = color, fill = fill)
     
     def text(self, pto, text, layer = 0, color = "", fill = "", rotate_text = 0, position = "", align = ""):
         """
@@ -387,8 +451,8 @@ class _shapes(object):
             * bitmap_path: path to bitmap or image file (jpg, png, pdf)
             
         **Optional parameters:**
-            * width = None: image width, if just width or height is supply the aspect ratio is mantain (in cm)
-            * height = None: image height, if just width or height is supply the aspect ratio is mantain (in cm)
+            * width = None: image width, if just width or height is supply the aspect ratio is mantain
+            * height = None: image height, if just width or height is supply the aspect ratio is mantain
             * layer = 0: layer member where the shape belongs
             * color = "": color of the line (see :ref:`colors examples <ex_shapes_color>`)
             * fill = "": fill texture of the line (see :ref:`fill examples <ex_shapes_fill>`)
@@ -437,8 +501,8 @@ class _shapes(object):
     def _build_bitmap_text(self, bitmap_path, width, height):
         ### Build a bitmap text
         opt = ""
-        if width is not None: opt = "width=%.4fcm," % width
-        if height is not None: opt = "height=%.4fcm" % height
+        if width is not None: opt = "width=%.4f##units##," % width
+        if height is not None: opt = "height=%.4f##units##" % height
         if not os.path.isfile(bitmap_path):
             self.error("Bitmap file does not exist", ref = "_build_bitmap_text")
         txt = r"\includegraphics[%s]{%s}" % (opt, bitmap_path.replace("\\", r"/"))
@@ -642,7 +706,7 @@ class _shapes(object):
         grp = self.parent.grp._auxgroup()
         grp.add = shps
         
-        ### Translate       
+        ### Translate
         self.parent.pto.rotate(grp.ptos_of_shapes, pto_rotation, Ax = Ax, Ay = Ay, Az = Az)
         
     
@@ -780,11 +844,38 @@ class _shapes(object):
             
         .. note::
             
-            * fill: fill texture of the shape (see fill examples)
+            * fill: fill texture of the shape (see :ref:`fill examples <ex_shapes_fill>`)
         
         """        
-        self._mod_properties(shps, value, "fill")         
-    
+        self._mod_properties(shps, value, "fill")
+        
+    def arrow_to_shapes(self, shps, start="latex", end="latex", scale=1.):
+        """
+        
+        .. _shapes_arrow_to_shapes:   
+                
+        **Synopsis:**
+            * Modify arrow tips value for a shape or list of shapes
+        
+        **Args:**
+            * shps: list of shapes or single shape. Given by id or shape object.
+            
+        **Optional parameters:**        
+            * start="latex": arrow tip type, at starting side
+            * end="latex": arrow tip type, at end side
+            * scale=1.: arrow scale    
+            
+        **Returns:**
+            * None
+            
+        .. note::
+            
+            * arrow: arrow tips types of the shape (see :ref:`arrow examples <ex_shapes_arrow>`)
+        
+        """
+        value = [start, end, scale]
+        self._mod_properties(shps, value, "arrow") 
+        
     def _mod_properties(self, shps, value, txt_property):
         ### Modifies properties by name
         
@@ -807,7 +898,11 @@ class _shapes(object):
                 _shp.color = val        
             elif txt_property == "fill":
                 if islist: self.error("Not accept lists of fill")
-                _shp.fill = val                
+                _shp.fill = val
+            elif txt_property == "arrow":
+                if islist: self.error("Not accept lists of arrow")
+                [start, end, scale] = val
+                _shp.arrow_build(start=start, end=end, scale=scale)              
             else:
                 self.error("Wrong labeling ")
             
@@ -817,7 +912,7 @@ class _shapes(object):
         
         ### Iterate
         for _shp in grp.shps:
-            if type(value) == type([]):
+            if type(value) == type([]) and txt_property != "arrow":
                 for _value in value:
                     _mode_prop(_shp, txt_property, _value, True)                   
             else:
@@ -1132,7 +1227,12 @@ class _shape(object):
             else:
                 log("Less than one point for the node %s" % self.id)            
             
-            str = r"\node %s at %s {%s};" % (opt, ptos,self.text)             
+            if units == "":
+                txtt = self.text.replace("##units##","cm")
+            else:
+                txtt = self.text.replace("##units##",units)
+            
+            str = r"\node %s at %s {%s};" % (opt, ptos, txtt)             
                 
         if self.action == "parabola":
             
@@ -1229,7 +1329,7 @@ class _shape(object):
         val = str(value).lower().strip()
         self.parent.shapes[self._key]["arrow"] = val
     
-    def arrow_build(self, start, end, scale):
+    def arrow_build(self, start="latex", end="latex", scale=1.):
         
         txt,s,e = "","",""
         if start != "" and not start is None: s = r"{%s[scale=%.4f##units##]}" % (start, scale)

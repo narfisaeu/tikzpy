@@ -33,12 +33,19 @@ class pytikz(object):
        :ivar unit="": general units use in TikZ drawing, no units by default
        :ivar scale=1.: scale value of the TikZ drawing
        :ivar scale_text=1.: scale value for the nodes text the TikZ drawing
+       :ivar rot_x=0.: angle (in degrees) through which the coordinate frame is rotated about the x axis
+       :ivar rot_y=0.: angle (in degrees) through which the coordinate frame is rotated about the y axis
+       :ivar rot_z=0.: angle (in degrees) through which the coordinate frame is rotated about the z axis
 
     """   
     
     """
         For the furture:
-            * Add 3D view
+            * Include distribution of Latex in directory
+            * Include distribution of Magic in directory
+            * Review 3D view. Idea use global rotate of all the points wit (rot_x, rot_y, rot_z) = 0
+            -------------- Done -------------------
+            * Add 3D view -- July 2016
 
         Install latex ubuntu:
             * sudo apt-get install texlive-full
@@ -67,6 +74,9 @@ class pytikz(object):
         self.opt.description = "Created with pyTikZ" 
         self.opt.extension = ".tikz.tex"
         self.opt.dpi = 300
+        self.opt.rot_x = 0.
+        self.opt.rot_y = 0.
+        self.opt.rot_z = 0.
     
     ########################### Functions
             
@@ -146,7 +156,7 @@ class pytikz(object):
         im.load(scale=2)
         im.save(route_jpg, "JPEG")        
     
-    def save_pdf(self, path, name, as_png = True):
+    def save_pdf(self, path, name, as_png = True, as_eps = True):
     
         """
         
@@ -162,14 +172,16 @@ class pytikz(object):
             
         **Optional parameters:**           
             * as_png = True: convert the pdf to a png file
+            * as_eps = True: convert the pdf to a eps file
             
         **Returns:**
             * route_pdf: the complete path to the pdf file
             
         .. note::
             
-            * Dependent on the local latex instalation, use **pdflatex** to generate a pdf (ubuntu: apt-get install texlive-full / windows: miktex.org)
-            * To save pdfs as png files requires **ImageMagick** to be installed, uses convert command
+            * Dependent on the local latex installation, use **pdflatex** to generate a pdf (ubuntu: apt-get install texlive-full / windows: miktex.org)
+            * To save pdfs as png files requires **ImageMagick** to be installed (also ghostscript in Windows), uses convert command
+            * To save pdfs as eps pdftops is used
             * See example
         
         """  
@@ -178,6 +190,7 @@ class pytikz(object):
         #route_png = os.path.join(path, name + ".png")
         route_pdf = os.path.join(path, name + ".tikz.pdf")
         route_png = os.path.join(path, name + ".tikz.png")
+        route_eps = os.path.join(path, name + ".tikz.eps")
         route_tik = os.path.join(path, name + self.extension)
         
         self._write_tikz(route_tik, True)
@@ -191,14 +204,26 @@ class pytikz(object):
             subprocess.check_call(lst)
         
         ### Create png
-        if as_png:     
-            lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
+        if as_png:
+            ### ImageMagick call "%PROGRAMFILES%\ImageMagick\Convert"
             if os.name == "nt":
+                lst = ["magick.exe", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
                 p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
                 out, err = p.communicate()
             else:
+                lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
                 subprocess.check_call(lst)
-            
+        
+        ### Create eps, pdftops
+        if as_eps:
+            if os.name == "nt":
+                lst = ["pdftops", "-eps", "-r 600", route_pdf, route_eps]
+                p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)        
+                out, err = p.communicate()
+            else:
+                lst = ["pdftops", "-eps", "-r 600", route_pdf, route_eps]
+                subprocess.check_call(lst)     
+        
         return route_pdf
         
     def save_tikz_stanalone(self, path, name):
@@ -276,6 +301,8 @@ class pytikz(object):
             self._close(f, intex)
             
         f.close()
+        
+        self.log("pyTikZ number points %i, number shapes %i" % (self.pto.counters["points"], self.shp.counters["shapes"]))
     
     def _add_colors(self, f):
         
@@ -360,6 +387,10 @@ class pytikz(object):
             txt = r"\usepackage{tikz}"
             self._wline(f,txt,0)  
             
+            if self._add_3D():
+                txt = r"\usepackage{tikz-3dplot}"
+                self._wline(f,txt,0)                  
+            
             txt = r"\usetikzlibrary{shapes,arrows,decorations,decorations.pathmorphing,arrows.meta,patterns,decorations.markings}"
             self._wline(f,txt,0)              
             self._wline(f,"",0)              
@@ -369,12 +400,23 @@ class pytikz(object):
             
         txt = r"%% Use \usepackage{tikz}"
         self._wline(f,txt,0)  
-        txt = r"%% Use \usetikzlibrary{shapes,arrows,decorations, decorations.pathmorphing,arrows.meta,patterns}"                        
+        if self._add_3D():
+            txt = r"%% Use \usepackage{tikz-3dplot}"
+            self._wline(f,txt,0)        
+        txt = r"%% Use \usetikzlibrary{shapes,arrows,decorations, decorations.pathmorphing,arrows.meta,patterns}" 
         self._wline(f,txt,0) 
-        txt = r"\begin{tikzpicture}[scale=%.4f]" % self.scale
+        
+        if self._add_3D():
+            txt = r"\tdplotsetmaincoords{%.2f}{%.2f}" % (self.rot_x, self.rot_z)
+            self._wline(f,txt,0)
+            txt = r"\begin{tikzpicture}[scale=%.4f,tdplot_main_coords]" % self.scale        
+        else:
+            txt = r"\begin{tikzpicture}[scale=%.4f]" % self.scale
         self._wline(f,txt,0)
+        
         txt = r"\tikzstyle{every node}=[scale=%.4f]" % self.scale_text
         self._wline(f,txt,1)
+        
         self._wline(f,"",1)
         
         self._add_colors(f)
@@ -442,6 +484,37 @@ class pytikz(object):
     @scale_text.setter
     def scale_text(self, value):
         self.opt.scaletext = value
+    
+    #### 3D perspective
+    def _add_3D(self):
+        if self.rot_x == 0 and self.rot_y == 0 and self.rot_z == 0:
+            return False
+        else:
+            return True
+    
+    @property
+    def rot_x(self):
+        return self.opt.rot_x
+        
+    @rot_x.setter
+    def rot_x(self, value):
+        self.opt.rot_x = value  
+
+    @property
+    def rot_y(self):
+        return self.opt.rot_y
+        
+    @rot_y.setter
+    def rot_y(self, value):
+        self.opt.rot_y = value  
+
+    @property
+    def rot_z(self):
+        return self.opt.rot_z
+        
+    @rot_z.setter
+    def rot_z(self, value):
+        self.opt.rot_z = value        
         
     ###########################
     def log(self, txt, ref = ""):

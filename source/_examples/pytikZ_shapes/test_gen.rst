@@ -189,4 +189,22 @@ Drawing created with the following pyTikZ code:
 
 .. literalinclude:: /_examples/pytikZ_shapes/test_shp_bitmap.py
     :linenos:
-    :language: python       
+    :language: python      
+
+Example 9 - Arrow tip types
+---------------------------
+.. _ex_shapes_arrow:
+
+**Available arrow tips types:**  
+
+A selected list of arrow tips are listed below (extracted from page 311 pgfmanualCVS2012-11-04),      
+    
+    .. image:: test_shp_arrow.tikz.png
+       :scale: 100 %
+       :align: center
+       
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_shapes/test_shp_arrow.py
+    :linenos:
+    :language: python     

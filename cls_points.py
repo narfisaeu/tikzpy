@@ -49,11 +49,13 @@ class _points(object):
         Future functions:
             * Export points to csv and txt file (separate by ;)
             * Assign to list of points, x, y, z independently
-            * Import points to csv and txt file (separate by ;)  -- July 2016
+            ----------- Done ----------------------
             * Add scale of ptos -- July 2016
             * Translation of a point function -- April 2016
             * Rotation of a point function -- April 2016
             * Show points -- April 2016
+            * Import points to csv and txt file (separate by ;) -- July 2016
+            * read_list_csv, ptos, middle_point, ptos_distance -- August 2017
     
     """
 
@@ -365,7 +367,7 @@ class _points(object):
             if type(pto_rotation) == self._type_of_point():
                 trans = pto_rotation
                 tx,ty,tz = trans.x,trans.y,trans.z
-                self.translate(_pto, x = tx, y = ty, z = tz)
+                self.translate(_pto, x = -tx, y = -ty, z = -tz)
             else:
                 self.parent.error("Origing point in translate not a point")
             #Rotate
@@ -377,7 +379,7 @@ class _points(object):
             
             #Un-translate to origin
             if type(pto_rotation) == self._type_of_point():
-                self.translate(_pto, x = -tx, y = -ty, z = -tz)
+                self.translate(_pto, x = tx, y = ty, z = tz)
             
         ### Check lists
         R = _rotation_matrix(Ax,Ay,Az)
@@ -449,7 +451,6 @@ class _points(object):
     def copy(self, ptos, alias_prefix = "", alias_sufix = ""):
     
         """
-        
         .. _pto_copy:         
                 
         **Synopsis:**
@@ -463,7 +464,7 @@ class _points(object):
             * alias_prefix = "": Add a prefix to the alias of each point
             
         **Returns:**
-            * List of points copied, with the alias modified
+            * List of points copied (ids), with the alias modified
             
         .. note::
         
@@ -486,7 +487,7 @@ class _points(object):
                     _alias = _alias + alias_sufix
                 if _alias == _pto.alias: _alias = "" 
                 
-                lst_out.append(_pto.copy(alias = _alias))
+                lst_out.append(_pto.copy(alias = _alias).id)
         else:
             _pto = self._choices(ptos)
             
@@ -497,7 +498,7 @@ class _points(object):
                 _alias = _alias + alias_sufix            
             if _alias == _pto.alias: _alias = ""
             
-            lst_out.append(_pto.copy(alias = _alias))
+            lst_out.append(_pto.copy(alias = _alias).id)
         
         return lst_out
         
@@ -591,6 +592,150 @@ class _points(object):
                 ptos.append(p.id)
         
         return ptos
+        
+    def ptos(self, x, y, z = None, layer=None, alias=''):
+    
+        """
+        .. _pto_ptos:         
+                
+        **Synopsis:**
+            * Returns a list of points build with the x, y, z coordinates 1D arrays
+            
+        **Args:**
+            * x: 1D array or list, coordinate x
+            * y: 1D array or list, coordinate y
+            
+        **Optional parameters:**
+            * z = None: 1D array or list, coordinate z. If None, fills z coordinate with 0, else with the number or with a given list.
+            * layer = None: 1D array or list, layers. If None, fills layer with 0, else with the number or with a given list.
+            * alias = '': 1D array or list, alias. If None, fills alias with '', else with a given list (all alias must be different if not '').
+            
+        **Returns:**
+            * List of points ids ptos
+            
+        .. note::
+            
+            * All 1D array or list should be of the same size
+            * None
+        
+        """
+        def check_np_array(val):
+            if type(val) is type(np.array([0])):
+                return val.tolist()
+            else:
+                return val
+                
+        _x = check_np_array(x)
+        _y = check_np_array(y)
+        _z = check_np_array(z)
+        _alias = check_np_array(alias)
+        _layer = check_np_array(layer)        
+        
+        if type(_x) is not type([]): self.parent.error("x is not a lists", ref = "ptos")
+        if type(_y) is not type([]): self.parent.error("y is not a lists", ref = "ptos")
+        if _z is None:
+            _z = [0.] * len(x)
+        else:
+            if type(_z) is not type([]):
+                _z = [_z] * len(x)
+            else:
+                _z = _z
+        if _layer is None:
+            _layer = [0.] * len(x)
+        else:
+            if type(z) is not type([]):
+                _layer = [_layer] * len(x)
+            else:
+                _layer = _layer
+        if type(_alias) is None:
+            _alias = [''] * len(x)
+        else:
+            if type(z) is not type([]):
+                _alias = [''] * len(x)
+            else:
+                _alias = _alias
+                
+        len_x = len(_x)
+        len_y = len(_y)
+        len_z = len(_z)
+        len_alias = len(_alias)
+        len_layer = len(_layer)
+        if len_x != len_y: self.parent.error("x and y different size", ref = "ptos")
+        if len_x != len_z: self.parent.error("x and y different size", ref = "ptos")
+        if len_x != len_alias: self.parent.error("alias and y different size", ref = "ptos")
+        if len_x != len_layer: self.parent.error("layer and y different size", ref = "ptos")
+
+        ptos = []
+        
+        for ii in range(0, len_x):
+            
+            p = self.pto(_x[ii], _y[ii], _z[ii], layer=_layer[ii], alias=_alias[ii])
+            ptos.append(p)
+        
+        return ptos        
+        
+    def middle_point(self, p1, p2, layer=0, alias=""):
+    
+        """
+        .. _pto_middle_point:         
+                
+        **Synopsis:**
+            * Return a middle point between p1 and p2
+            
+        **Args:**
+            * pto1: point one
+            * pto2: point two
+            
+        **Optional parameters:**
+            * layer = 0: layer member new point
+            * alias = "": alias name new point
+            
+        **Returns:**
+            * Point at the middle distance
+            
+        .. note::
+        
+            * None
+        
+        """    
+
+        x = (p1.x + p2.x)/2.
+        y = (p1.y + p2.y)/2.
+        z = (p1.z + p2.z)/2.
+        
+        p = self.pto(x, y, z, layer=layer, alias=alias)
+        
+        return p
+        
+    def ptos_distance(self, p1, p2):
+    
+        """
+        .. _pto_ptos_distance:         
+                
+        **Synopsis:**
+            * Distance between p1 and p2
+            
+        **Args:**
+            * pto1: point one
+            * pto2: point two
+            
+        **Optional parameters:**
+            * None
+            
+        **Returns:**
+            * Distance between two points
+            
+        .. note::
+        
+            * None
+        
+        """    
+
+        x = (p1.x - p2.x)**2.
+        y = (p1.y - p2.y)**2.
+        z = (p1.z - p2.z)**2.
+                
+        return (x + y + z)**0.5
         
     ###################################### Internal
     def _all_points(self):

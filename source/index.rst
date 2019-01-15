@@ -50,13 +50,33 @@ Main Index
             * **files_crawl** :doc:`pyTikZ.files_crawl <_files_crawl>`  
     
     Or check the :ref:`reference index <py_tikz_reference_index_doc>`
+
+Requirements or pre-requisites
+==============================
+
+    * Install **Latex** in Windows:
+        
+        * Install MikTex (miktex.org)
+        
+    * Install **Latex** in Ubuntu:
+        
+        * sudo apt-get install texlive-full
+        * sudo apt-get install xzdec
+        * sudo tlmgr install pgf
+        * sudo tlmgr install tikz-cd 
+
+    * Packages: **tikz, tikz-3dplot**
+    
+    * TikZ libraries: **shapes,arrows,decorations, decorations.pathmorphing,arrows.meta,patterns**
+    
+    * Recomended to install **ImageMagik**
     
 First steps **pyTikZ**
 ======================
     
     First steps and introductory examples on how to use pyTikZ can be found in this section.
     
-    * **pyTikZ: tikZ = pyTikZ.pytikz()** --> :doc:`main class examples <_00_pytikZ>`  
+    * **pyTikZ: tikZ = pyTikZ.pytikz()** --> :doc:`pyTikZ examples </_examples/pytikZ/test_gen>`
     
     * **Points: tikZ.pto** --> :doc:`points examples </_examples/pytikZ_points/test_gen>`
         

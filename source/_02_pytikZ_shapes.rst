@@ -8,8 +8,10 @@ The shapes object allow to add 2D shapes to the pyTikZ object such as:
     * Line between two points. See :ref:`shp.line <shapes_line>`
     * Path of multiple points. See :ref:`shp.path <shapes_path>`
     * Circle given by center and radius. See :ref:`shp.circle <shapes_circle>`
-    * Arc given by starting point, radius and angles. See :ref:`shp.arc <shapes_arc>`
+    * Arc given by starting point, radius and angles. See :ref:`shp.arc <shapes_arc>` and :ref:`shp.arc_by_center <shapes_arc_by_center>`
     * Text label. See :ref:`shp.text <shapes_text>`
+    * Image or bitmaps. See :ref:`shp.bitmap <shapes_bitmap>`
+    * Square grid shape (given by two corners). See :ref:`shp.grid <shapes_grid>`
 
 Load main **pyTikZ** class as follow and create and edit spatial 2D shapes and text:
 

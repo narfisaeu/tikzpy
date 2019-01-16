@@ -70,6 +70,9 @@ custom colors can be added in the :ref:`colors object <colors_cls>`. As in the f
     * color = "r_g_b_trans"         , RGB values + transparency. Scale 0-255.
     * calor = "custom name"         , names defined in the :ref:`colors object <colors_cls>`
 
+note that can also be used the **transparent!30** color, to create transparencies.
+    
+    
     .. image:: test_shp_color.tikz.png
        :scale: 100 %
        :align: center
@@ -118,5 +121,90 @@ See the following example:
 Drawing created with the following pyTikZ code:
 
 .. literalinclude:: /_examples/pytikZ_shapes/test_shp_text.py
+    :linenos:
+    :language: python   
+    
+Example 6 - Fill properties options
+-----------------------------------
+.. _ex_shapes_fill:
+
+**Available fill inputs values for the fill property:**  
+
+By **color**, in a similar way that is color property (see :ref:`colors examples <ex_shapes_color>`)
+    
+    * fill = "color name"          , Color name   
+    * fill = "color1!30"           , Transparency of a color
+    * fill = "color1!30!color2"    , Tranparency between two colors
+    * fill = "r_g_b"               , RGB values. Scale 0-255.
+    * fill = "r_g_b_trans"         , RGB values + transparency. Scale 0-255.
+    * fill = "custom name"         , names defined in the :ref:`colors object <colors_cls>`    
+
+With a **pattern**
+
+    * the pattern is create with the function :ref:`pattern_build(pattern,color) <shapes_pattern_build>`    
+
+With a **shade path** (see section 41 TikZ manual)
+    
+    * the shade path is create with the function 
+        
+see following examples:
+
+    .. image:: test_shp_fill.tikz.png
+       :scale: 100 %
+       :align: center
+           
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_shapes/test_shp_fill.py
+    :linenos:
+    :language: python  
+
+Example 7 - Grid shape options
+------------------------------
+.. _ex_shapes_grid:
+
+See the following example:    
+
+    .. image:: test_shp_grid.tikz.png
+       :scale: 100 %
+       :align: center
+       
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_shapes/test_shp_grid.py
+    :linenos:
+    :language: python  
+
+Example 8 - Bitmap shape options
+--------------------------------
+.. _ex_shapes_bitmap:
+
+See the following example:    
+
+    .. image:: test_shp_bitmap.tikz.png
+       :scale: 100 %
+       :align: center
+       
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_shapes/test_shp_bitmap.py
+    :linenos:
+    :language: python      
+
+Example 9 - Arrow tip types
+---------------------------
+.. _ex_shapes_arrow:
+
+**Available arrow tips types:**  
+
+A selected list of arrow tips are listed below (extracted from page 311 pgfmanualCVS2012-11-04),      
+    
+    .. image:: test_shp_arrow.tikz.png
+       :scale: 100 %
+       :align: center
+       
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_shapes/test_shp_arrow.py
     :linenos:
     :language: python     

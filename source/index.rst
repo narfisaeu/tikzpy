@@ -70,6 +70,26 @@ First steps **pyTikZ**
 
     * **groups: tikZ.grp** --> :doc:`group examples </_examples/pytikZ_groups/test_gen>`
 
+Requirements or pre-requisites
+==============================
+
+    * Install **Latex** in Windows:
+
+        * Install MikTex (miktex.org)
+
+    * Install **Latex** in Ubuntu:
+
+        * sudo apt-get install texlive-full
+        * sudo apt-get install xzdec
+        * sudo tlmgr install pgf
+        * sudo tlmgr install tikz-cd
+
+    * Packages: **tikz, tikz-3dplot**
+
+    * TikZ libraries: **shapes,arrows,decorations, decorations.pathmorphing,arrows.meta,patterns**
+
+    * Recomended to install **ImageMagik** and **Ghostscript** for png creation in Windows
+
 Gallery of drawings and pictures performed using **pyTikZ**
 ===========================================================
 

@@ -8,6 +8,7 @@ import cls_labels
 import cls_plots
 import cls_colors
 import cls_canavas
+import buffer_data.cls_data_buffer as cls_data_buff
 import obj_data
 import subprocess
 import files_crawl as libfile
@@ -64,6 +65,7 @@ class pytikz(object):
         self.plots = cls_plots._plots(self)
         self.col = cls_colors._colors(self)
         self.grp = cls_canavas._canavas(self)
+        self.dbuffer = cls_data_buff._data_buff(self)
 
         self.opt = obj_data._clsdata(type = None)
 
@@ -209,11 +211,20 @@ class pytikz(object):
         if as_png:
             ### ImageMagick call "%PROGRAMFILES%\ImageMagick\Convert"
             if os.name == "nt":
-                pathmagick = os.path.join("ImageMagick","magick.exe")
+                #pathmagick = os.path.join("ImageMagick","magick.exe")
+                #pathmagick = os.path.join(self.folderpath,pathmagick)
+                #lst = [pathmagick, "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
+                pathmagick = os.path.join("xpdftools_bin32","pdftopng.exe")
                 pathmagick = os.path.join(self.folderpath,pathmagick)
-                lst = [pathmagick, "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
+                lst = [pathmagick,"-r","300",route_pdf,route_png]
+
                 p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)
                 out, err = p.communicate()
+
+                if os.path.isfile(route_png+"-000001.png"):
+                    if os.path.isfile(route_png): os.remove(route_png)
+                    os.rename(route_png+"-000001.png", route_png)
+
             else:
                 lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
                 subprocess.check_call(lst)
@@ -221,7 +232,9 @@ class pytikz(object):
         ### Create eps, pdftops
         if as_eps:
             if os.name == "nt":
-                lst = ["pdftops", "-eps", "-r 600", route_pdf, route_eps]
+                pathmagick = os.path.join("xpdftools_bin32","pdftops.exe")
+                pathmagick = os.path.join(self.folderpath,pathmagick)
+                lst = [pathmagick, "-eps", route_pdf, route_eps]
                 p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)
                 out, err = p.communicate()
             else:
@@ -229,6 +242,9 @@ class pytikz(object):
                 subprocess.check_call(lst)
 
         return route_pdf
+
+    def _rename_png(sef,path):
+        pass
 
     def save_tikz_stanalone(self, path, name):
 
@@ -324,7 +340,9 @@ class pytikz(object):
 
             plots = self.plots.getitem(key)
 
-            plots.draw_group_elements(plots, units = self.units)
+            if plots.parent.assemblys[key]["_draw"] == False:
+
+                plots.draw_group_elements(plots, units = self.units)
 
     def _add_lines(self, f):
         ### [str,self.group,self.zorder,self.id,self.comment]

@@ -143,7 +143,7 @@ class _shapes(object):
 
         .. note::
 
-            * See example of lines
+            * See example of lines in :doc:`shapes examples </_examples/pytikZ_shapes/test_gen>`
 
         """
 
@@ -197,7 +197,7 @@ class _shapes(object):
 
         .. note::
 
-            * See example of paths
+            * See example of paths in :doc:`shapes examples </_examples/pytikZ_shapes/test_gen>`
 
         """
 
@@ -253,7 +253,7 @@ class _shapes(object):
 
         .. note::
 
-            * See example of circles
+            * See example of circles in :doc:`shapes examples </_examples/pytikZ_shapes/test_gen>`
 
         """
 
@@ -309,7 +309,7 @@ class _shapes(object):
 
         .. note::
 
-            * See example of arcs
+            * See example of arcs in :doc:`shapes examples </_examples/pytikZ_shapes/test_gen>`
 
         """
 
@@ -368,7 +368,7 @@ class _shapes(object):
 
         .. note::
 
-            * See example of arcs
+            * See example of arcs in :doc:`shapes examples </_examples/pytikZ_shapes/test_gen>`
 
         """
 

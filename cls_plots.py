@@ -6,6 +6,7 @@ import obj_data
 import copy
 
 import plots.cls_racime as asse_rac
+import plots.cls_bars_vertical as bars_vertical
 
 def log(txt):
 
@@ -20,13 +21,13 @@ class _plots(object):
     :platform: Unix, Windows
     :synopsis: buld-in plots based on pyTikZ
 
-    :properties:
-        Available plots:
-            * Racime
+    :Available plots:
+        * Racime
+        * Vertical bars plots
 
-    **Chracteristics of a shape (shp) object**
+    **Chracteristics of a plot object**
 
-        * Each shape object has different properties depending on the nature of the shape
+        * Each plot object has different properties depending on the nature of the plot.
 
     """
 
@@ -77,11 +78,41 @@ class _plots(object):
 
         **Usage**
 
-            * See :doc:`plots examples </_examples/pytikZ_plots/test_gen>`
+            * See :doc:`plots examples </_examples/pytikZ_plots/test_gen>`, :ref:`example 1 <ex_plots_racime_1>`, :ref:`example 2 <ex_plots_racime_2>`
 
         """
 
         rac = self._additem("racime", group = group)
+
+        rac._handler.load_data_ini(rac)
+
+        return rac
+
+    def bars_vertical(self, group = 0):
+
+        """
+        .. _bars_vertical_plot:
+
+        **Synopsis:**
+            * Returns a vertical bars plot object
+
+        **Args:**
+            * None
+
+        **Optional parameters:**
+            * group = 0: group id
+
+        **Returns:**
+            * A vertical bars plot object
+
+        **Usage**
+
+            * See :doc:`plots examples </_examples/pytikZ_plots/test_gen>`, :ref:`example 3 <ex_plots_bars_vertical_1>`, :ref:`example 4 <ex_plots_bars_vertical_2>`
+            * See :ref:`vertical plot object <bars_vertical_cls>`            
+
+        """
+
+        rac = self._additem("bars_vertical", group = group)
 
         rac._handler.load_data_ini(rac)
 
@@ -158,7 +189,6 @@ class _assembly(object):
 
         self.parent = parent
         self._key = key
-        self._draw = False
 
         if not self.parent.assemblys[key]:
 
@@ -168,15 +198,21 @@ class _assembly(object):
             self.parent.assemblys[self._key]["labels"] = []
             self.parent.assemblys[self._key]["group_label"] = ""
             self.parent.assemblys[self._key]["mpto"] = None
+            self.parent.assemblys[self._key]["_draw"] = False
 
         if type == "racime":
             self._handler = asse_rac._racime(self.parent)
+        elif type == "bars_vertical":
+            self._handler = bars_vertical._bars_vertical(self.parent)
         else:
             raise Error
 
         #Setter and getter properties dynamically add
-        for ele in self._handler.lst_data:
+        for ele in self._handler.lst_data_conf:
             self.addProperty(ele)
+
+        #Add methods
+        #self._handler.load_methods(self,key)
 
     def addProperty(self, attribute):
         # create local setter and getter with a particular attribute name
@@ -236,30 +272,81 @@ class _assembly(object):
 
         ### Move
         mpto = self.parent.assemblys[self._key]["mpto"]
-        #if mpto:
-        #    self.parent.parent.move_list_shapes( mpto, shps)
+        if mpto:
+            #self.parent.parent.move_list_shapes( mpto, shps)
+            self.parent.parent.shp.translate(shps, x=mpto.x, y=mpto.y, z=mpto.z)
 
         # Add labels
         for lbl in self.parent.assemblys[self._key]["labels"]:
             self.parent.parent.add_label_to_list_shapes(shps, lbl)
 
-    #############################################
+    ############# declared methods functions
 
-    def add_element(self, text, thickness = "thin", separation = None):
+    def add_element(self, *args, **kwargs):
 
-        self.parent.assemblys[self._key]["element"].append([text, thickness, separation])
+        return self._handler.add_element(*args+(self,), **kwargs)
 
-    '''
-    @property
-    def l1(self):
+    def load_data_buffer(self, data_buff):
 
-        return self.parent.assemblys[self._key]["l1"]
+        """
+        .. _bars_vertical_load_data_buffer:
 
-    @l1.setter
-    def l1(self, value):
+        **Synopsis:**
+            * Loads a data buffer file into the plot to be plot in case is required
 
-        self.parent.assemblys[self._key]["l1"] = value
-    '''
+        **Args:**
+            * data_buff object (see :ref:`Data buffer class <dbuffer_cls>`)
+
+        **Optional parameters:**
+            * units = None (by default the pyTikZ units will be use)
+
+        **Returns:**
+            * None
+
+        **Usage**
+            * See :ref:`example 3 <ex_plots_bars_vertical_1>`
+
+        """
+
+        self._handler.load_data_buffer(self, data_buff)
+
+    def draw_plot(self, units = None):
+
+        """
+        .. _bars_vertical_draw_plot:
+
+        **Synopsis:**
+            * Draw / load the plot. The elements that compose the plot become accessible. Once is draw it can not be draw again.
+
+        **Args:**
+            * None
+
+        **Optional parameters:**
+            * units = None (by default the pyTikZ units will be use)
+
+        **Returns:**
+            * None
+
+        **Usage**
+            * See :ref:`example 3 <ex_plots_bars_vertical_1>`
+
+        """
+        if self.parent.assemblys[self._key]["_draw"] == False:
+
+            plots = self.parent.parent.plots.getitem(self._key)
+
+            if units is None: units = self.parent.parent.units
+            plots.draw_group_elements(plots, units = units)
+
+            self.parent.assemblys[self._key]["_draw"] = True
+
+    #def _add_element(self, text, thickness = "thin", separation = None):
+
+    #    print self.element
+    #    #self.parent.assemblys[self._key]["element"].append([text, thickness, separation])
+    #    self.element.append([text, thickness, separation])
+    #    print self.element
+
     #############################################
 
     @property

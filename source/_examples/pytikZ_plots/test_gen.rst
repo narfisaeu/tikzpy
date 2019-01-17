@@ -7,7 +7,7 @@ Examples of how to use the shape objects :ref:`pyTikZ.plots <py_tikz_plots_doc>`
 
 Plot racimes 1 - Draws a racime plot
 ------------------------------------
-.. _ex_plots_racime 1:
+.. _ex_plots_racime_1:
 
 The build-in plot draws a racime plot.
 
@@ -23,7 +23,7 @@ Drawing created with the following pyTikZ code:
 
 Plot racimes 2 - Scatter propagation plot
 -----------------------------------------
-.. _ex_plots_racime 2:
+.. _ex_plots_racime_2:
 
 The build-in plot draws a racime plot.
 
@@ -37,4 +37,34 @@ Drawing created with the following pyTikZ code:
     :linenos:
     :language: python
 
-test_plots_racime_2
+Plot Vertical bars plot 1
+-------------------------
+.. _ex_plots_bars_vertical_1:
+
+The build-in plot draws a vertical bars plot.
+
+    .. image:: test_plots_bars_vertical_1.tikz.png
+       :scale: 100 %
+       :align: center
+
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_plots/test_plots_bars_vertical_1.py
+    :linenos:
+    :language: python
+
+Plot Vertical bars plot 2
+-------------------------
+.. _ex_plots_bars_vertical_2:
+
+The build-in plot draws a vertical bars plot.
+
+    .. image:: test_plots_bars_vertical_2.tikz.png
+       :scale: 100 %
+       :align: center
+
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_plots/test_plots_bars_vertical_2.py
+    :linenos:
+    :language: python

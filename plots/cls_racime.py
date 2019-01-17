@@ -1,7 +1,13 @@
+#!/usr/bin/python
+
+import os,sys
 import math
 import numbers
 import pyTikZ.obj_data
 import copy
+import types
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+import cls_plots
 
 def log(txt):
 
@@ -15,7 +21,7 @@ class _racime(object):
         self._tik = self._parent.parent
 
         ### List of extra data properties
-        self.lst_data = ["element", "l1", "l2", "l3", "origin", "separation", "p_vertex", "p_racimes", "end_thickness", "total_height"]
+        self.lst_data_conf= ["element", "l1", "l2", "l3", "origin", "separation", "p_vertex", "p_racimes", "end_thickness", "total_height"]
 
     def load_data_ini(self, assem):
         ### Initialize properties
@@ -65,6 +71,15 @@ class _racime(object):
             return th_si
         else:
             return self._parent.assemblys[_key][attribute]
+
+    ############# declare methods functions
+
+    def add_element(self, text, handler, thickness = "thin", separation = None):
+
+        #handler.parent.assemblys[handler._key]["element"].append([text, thickness, separation])
+        handler.element.append([text, thickness, separation])
+
+    ############# Main draw function
 
     def draw_group_elements(self, units, assem):
         ### Draw group of shapes function call from main drawer functions
@@ -135,13 +150,13 @@ class _racime(object):
             [text, thickness, separation] = ele
 
             # Points
-            _p1 = tik.pto.aux(0.,sum_si,0.)
+            _p1 = tik.pto.pto(0.,sum_si,0.)
             p1.append(_p1)
 
-            _p2 = tik.pto.aux(float(self._parent.assemblys[_key]["l1"]),sum_si,0.)
+            _p2 = tik.pto.pto(float(self._parent.assemblys[_key]["l1"]),sum_si,0.)
             p2.append(_p2)
 
-            _pm = tik.pto.aux(float(self._parent.assemblys[_key]["l1"])/2.,sum_si,0.)
+            _pm = tik.pto.pto(float(self._parent.assemblys[_key]["l1"])/2.,sum_si,0.)
             pm.append(_pm)
 
             # Max height
@@ -167,8 +182,8 @@ class _racime(object):
             else:
                  th = th + float(1)
 
-            _p3 = tik.pto.aux(x,y,0.)
-            _p4 = tik.pto.aux(xx,y,0.)
+            _p3 = tik.pto.pto(x,y,0.)
+            _p4 = tik.pto.pto(xx,y,0.)
 
             p3.append(_p3)
             p4.append(_p4)
@@ -179,6 +194,7 @@ class _racime(object):
 
     def is_number(self, s):
         try:
+            if s is None: return False
             float(s)
             return True
         except ValueError:

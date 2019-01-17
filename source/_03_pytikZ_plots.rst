@@ -31,10 +31,18 @@ Load main **pyTikZ** class as follow and add a new plot:
 
 and start bulding your drawing. See more :doc:`plots examples </_examples/pytikZ_plots/test_gen>`.
 
-Shapes functions. Class -> pyTikZ.plots
+Plots functions. Class -> pyTikZ.plots
 ---------------------------------------
 
 .. _py_tikz_plot:
 .. currentmodule:: cls_plots
 .. autoclass:: _plots
    :members:
+
+Vertical bars plot
+---------------------------------------
+
+.. _py_tikz_bars_vertical:
+.. currentmodule:: plots.cls_bars_vertical
+.. autoclass:: _bars_vertical
+  :members:

@@ -1,0 +1,13 @@
+*
+!.gitattributes
+!.gitignore
+!readme.md
+!.gitkeep
+!*.pxi
+!*.pyx
+!*.py
+!*.txt
+!*.bs
+!*.rst
+!*/
+xpdftools_bin32/

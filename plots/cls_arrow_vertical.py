@@ -15,26 +15,24 @@ def log(txt):
 
     print txt
 
-class _bars_vertical(object):
+class _arrow_vertical(object):
 
-    """**Vertical bars plot:**
+    """**Vertical arrow plot:**
 
-    .. _bars_vertical_cls:
+    .. _arrow_vertical_cls:
 
-    Creates a vertical bars plot.
+    Creates a vertical arrow plot showing a dependant thickness bases on lbl_axis0.
 
     :ivar p0: initial point of the plot
-    :ivar sep_L: height of the bars
-    :ivar width: width of the longer bar
-    :ivar width: width of the longer bar
+    :ivar sep_L: height of the arrow
+    :ivar thick_scale: scale of the thikcness arrow
     :ivar lst_title: shapes conform the title
     :ivar title: text of the title
-    :ivar lbl_axis0: label to use in the data buffer for bars values
-    :ivar lbl_label1: label to use in the data buffer for bars text column 2
-    :ivar lbl_label2: label to use in the data buffer for bars text column 3
-    :ivar lst_text2: shapes conform the vertical text column 2
-    :ivar lst_text3: shapes conform the vertical text column 3
-    :ivar lst_path0: shapes conform the bars
+    :ivar lbl_axis0: label to use in the data buffer for arrow values
+    :ivar lbl_label1: label to use in the data buffer for arrow text column 2
+    :ivar lst_text1: shapes conform the vertical text column 2
+    :ivar lst_path0: shapes conform the arrow
+    :ivar up-down: arrow up or down (True/False)
     :ivar shps: all the shapes that conform the plot
 
     :Functions:
@@ -43,7 +41,7 @@ class _bars_vertical(object):
 
     **Usage**
 
-        * See :doc:`plots examples </_examples/pytikZ_plots/test_gen>`, :ref:`example 1 <ex_plots_bars_vertical_1>`, :ref:`example 2 <ex_plots_bars_vertical_2>`
+        * See :doc:`plots examples </_examples/pytikZ_plots/test_gen>`, :ref:`example 1 <ex_plots_arrow_vertical_1>`
 
     """
 
@@ -53,10 +51,10 @@ class _bars_vertical(object):
         self._tik = self._parent.parent
 
         ### List of data properties and setup
-        self.lst_data_conf = ["p0","sep_L","width", "lst_title", "title", "lst_text2", "lst_text3", "lst_path0"]
+        self.lst_data_conf = ["p0","sep_L","thick_scale", "lst_title", "title", "lst_text1", "lst_path0","up_down"]
         ### List of labels from databuffer to define the axis
         self.lst_data_conf += ["data_buff","shps"]
-        self.lst_data_conf += ["lbl_axis0", "lbl_label1", "lbl_label2"]
+        self.lst_data_conf += ["lbl_axis0", "lbl_label1"]
 
     def load_data_ini(self, assem):
         ### Initialize properties
@@ -67,11 +65,11 @@ class _bars_vertical(object):
 
         self._parent.assemblys[_key]["p0"] = None
         self._parent.assemblys[_key]["sep_L"] = 1
-        self._parent.assemblys[_key]["width"] = 5
+        self._parent.assemblys[_key]["thick_scale"] = 5
+        self._parent.assemblys[_key]["up_down"] = True
         self._parent.assemblys[_key]["lst_title"] = []
         self._parent.assemblys[_key]["title"] = ""
-        self._parent.assemblys[_key]["lst_text2"] = []
-        self._parent.assemblys[_key]["lst_text3"] = []
+        self._parent.assemblys[_key]["lst_text1"] = []
         self._parent.assemblys[_key]["lst_path0"] = []
 
     def set_property(self, attribute, value, _key):
@@ -115,63 +113,47 @@ class _bars_vertical(object):
             # Normalize data
             max_length = np.max(assem.data_buff[assem.lbl_axis0])
             aux_lbl_axis0 = assem.lbl_axis0 + tik.dbuffer.aux_def + "0"
-            assem.data_buff[aux_lbl_axis0] = assem.width * assem.data_buff[assem.lbl_axis0] / (1.0 * max_length)
+            assem.data_buff[aux_lbl_axis0] =  assem.thick_scale * assem.data_buff[assem.lbl_axis0] / (1.0 * max_length)
 
             # Add paths
             l1 = tik.shp.path([], layer = 0)
             if ii == 0: p0 = assem.p0
-            else: p0 = p3.copy()
+            else: p0 = p1.copy()
             l1.addpto = p0
             p1=p0.copy()
-            p1.x = p1.x + assem.data_buff[aux_lbl_axis0][ii] / 2.
+            p1.y = p1.y + assem.sep_L
             l1.addpto = p1
-            p2=p1.copy()
-            p2.y = p2.y + assem.sep_L
-            l1.addpto = p2
-            p3=p2.copy()
-            p3.x = p3.x - assem.data_buff[aux_lbl_axis0][ii] / 2.
-            l1.addpto = p3
-            p4=p3.copy()
-            p4.x = p4.x - assem.data_buff[aux_lbl_axis0][ii] / 2.
-            l1.addpto = p4
-            p5=p4.copy()
-            p5.y = p5.y - assem.sep_L
-            l1.addpto = p5
-            l1.addpto = p0
-
+            l1.thick = assem.data_buff[aux_lbl_axis0][ii]
             l1.zorder = assem.zorder
             l1.addlabel = assem.labels
             assem.lst_path0.append(l1)
 
-            # Add text3
-            ptxt3 = p0.copy()
-            ptxt3.y = ptxt3.y + assem.sep_L/2.
-            txt3 = tik.shp.text(ptxt3, assem.data_buff[assem.lbl_label1][ii], layer=0, color='', fill='', rotate_text=0, position='', align='center')
-            txt3.zorder = assem.zorder + 1e-6
-            txt3.addlabel = assem.labels
-
-            assem.lst_text3.append(txt3)
-
             # Add text2
-            ptxt2 = p1.copy()
+            ptxt2 = p0.copy()
             ptxt2.y = ptxt2.y + assem.sep_L/2.
             ptxt2.x = ptxt2.x
-            txt2 = tik.shp.text(ptxt2, assem.data_buff[assem.lbl_label2][ii], layer=0, color='', fill='', rotate_text=0, position='right', align='right')
+            txt2 = tik.shp.text(ptxt2, assem.data_buff[assem.lbl_label1][ii], layer=0, color='', fill='', rotate_text=0, position='right', align='right')
             txt2.zorder = assem.zorder + 1e-6
             txt2.addlabel = assem.labels
 
-            assem.lst_text2.append(txt2)
+            assem.lst_text1.append(txt2)
 
-            # Title
-            if ii == 0:
-                pto_title = p0.copy()
-                pto_title.y = pto_title.y - assem.sep_L/2.
-                tit = tik.shp.text(pto_title, assem.title, layer=0, color='', fill='', rotate_text=0, position='', align='center')
-                tit.zorder = assem.zorder + 1e-6
-                tit.addlabel = assem.labels
-                assem.lst_title.append(tit)
+        # Title
+        pto_title = assem.p0.copy()
+        pto_title.y = pto_title.y - assem.sep_L/2.
+        tit = tik.shp.text(pto_title, assem.title, layer=0, color='', fill='', rotate_text=0, position='', align='center')
+        tit.zorder = assem.zorder + 1e-6
+        tit.addlabel = assem.labels
+        assem.lst_title.append(tit)
 
-        assem.shps = assem.shps + assem.lst_path0 + assem.lst_text3 + assem.lst_text2 + assem.lst_title
+        # Arrow
+        if assem.up_down:
+            tik.shp.arrow_to_shapes(assem.lst_path0[0], start="triangle 60", end="", scale=1.)
+        else:
+            tik.shp.arrow_to_shapes(assem.lst_path0[-1], start="", end="triangle 60", scale=1.)
+
+        assem.shps = assem.shps + assem.lst_path0 + assem.lst_text1 + assem.lst_title
+
         ### Common return
         return assem.shps
 

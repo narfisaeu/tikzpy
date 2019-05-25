@@ -68,3 +68,19 @@ Drawing created with the following pyTikZ code:
 .. literalinclude:: /_examples/pytikZ_plots/test_plots_bars_vertical_2.py
     :linenos:
     :language: python
+
+Plot Vertical arrow plot 1
+-------------------------
+.. _ex_plots_arrow_vertical_1:
+
+The build-in plot draws a vertical arrow plot.
+
+    .. image:: test_plots_arrow_vertical_1.tikz.png
+       :scale: 100 %
+       :align: center
+
+Drawing created with the following pyTikZ code:
+
+.. literalinclude:: /_examples/pytikZ_plots/test_plots_arrow_vertical_1.py
+    :linenos:
+    :language: python

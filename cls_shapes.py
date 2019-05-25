@@ -912,7 +912,7 @@ class _shapes(object):
 
         ### Iterate
         for _shp in grp.shps:
-            if type(value) == type([]) and txt_property != "arrow":
+            if type(value) == type([]) and txt_property != "arrow" and txt_property != "fill":
                 for _value in value:
                     _mode_prop(_shp, txt_property, _value, True)
             else:

@@ -46,3 +46,15 @@ Vertical bars plot
 .. currentmodule:: plots.cls_bars_vertical
 .. autoclass:: _bars_vertical
   :members:
+
+Vertical arrow plot
+---------------------------------------
+
+.. _py_tikz_arrow_vertical:
+.. currentmodule:: plots.cls_arrow_vertical
+.. autoclass:: _arrow_vertical
+:members:
+
+
+.. autoclass:: cls_plots._assembly
+  :members: load_data_buffer, draw_plot

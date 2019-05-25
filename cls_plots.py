@@ -7,6 +7,7 @@ import copy
 
 import plots.cls_racime as asse_rac
 import plots.cls_bars_vertical as bars_vertical
+import plots.cls_arrow_vertical as arrow_vertical
 
 def log(txt):
 
@@ -108,11 +109,41 @@ class _plots(object):
         **Usage**
 
             * See :doc:`plots examples </_examples/pytikZ_plots/test_gen>`, :ref:`example 3 <ex_plots_bars_vertical_1>`, :ref:`example 4 <ex_plots_bars_vertical_2>`
-            * See :ref:`vertical plot object <bars_vertical_cls>`            
+            * See :ref:`vertical plot object <bars_vertical_cls>`
 
         """
 
         rac = self._additem("bars_vertical", group = group)
+
+        rac._handler.load_data_ini(rac)
+
+        return rac
+
+    def arrow_vertical(self, group = 0):
+
+        """
+        .. _arrow_vertical_plot:
+
+        **Synopsis:**
+            * Returns a vertical arrow plot object
+
+        **Args:**
+            * None
+
+        **Optional parameters:**
+            * group = 0: group id
+
+        **Returns:**
+            * A vertical arrow plot object
+
+        **Usage**
+
+            * See :doc:`plots examples </_examples/pytikZ_plots/test_gen>`, :ref:`example 1 <ex_plots_arrow_vertical_1>`
+            * See :ref:`vertical plot object <arrow_vertical_cls>`
+
+        """
+
+        rac = self._additem("arrow_vertical", group = group)
 
         rac._handler.load_data_ini(rac)
 
@@ -204,6 +235,8 @@ class _assembly(object):
             self._handler = asse_rac._racime(self.parent)
         elif type == "bars_vertical":
             self._handler = bars_vertical._bars_vertical(self.parent)
+        elif type == "arrow_vertical":
+            self._handler = arrow_vertical._arrow_vertical(self.parent)
         else:
             raise Error
 
@@ -289,7 +322,7 @@ class _assembly(object):
     def load_data_buffer(self, data_buff):
 
         """
-        .. _bars_vertical_load_data_buffer:
+        .. _assem_load_load_data_buffer:
 
         **Synopsis:**
             * Loads a data buffer file into the plot to be plot in case is required
@@ -313,7 +346,7 @@ class _assembly(object):
     def draw_plot(self, units = None):
 
         """
-        .. _bars_vertical_draw_plot:
+        .. _assem_draw_plot:
 
         **Synopsis:**
             * Draw / load the plot. The elements that compose the plot become accessible. Once is draw it can not be draw again.

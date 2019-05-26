@@ -1,0 +1,15 @@
+\documentclass[convert={density=300,outext=.png}]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,decorations, decorations.pathmorphing,arrows}
+
+\begin{document}
+%% Use \usepackage{tikz}
+%% Use \usetikzlibrary{shapes,arrows,decorations, decorations.pathmorphing,arrows}
+\begin{tikzpicture}[scale=0.9000]
+	%%Created with pytikz
+	
+	\draw  (1.0000,2.0000,0.0000) -- (2.0000,5.0000,0.0000);
+	\draw [<-> ,line width = 0.2000 ,decorate, decoration={random steps, segment length=2, amplitude=2} ,red!30]  (1.0000,2.0000,0.0000) -- (2.0000,5.0000,0.0000);
+
+\end{tikzpicture}
+\end{document}

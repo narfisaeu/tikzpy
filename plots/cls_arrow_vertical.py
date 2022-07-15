@@ -13,7 +13,7 @@ import cls_plots
 
 def log(txt):
 
-    print txt
+    print( txt)
 
 class _arrow_vertical(object):
 

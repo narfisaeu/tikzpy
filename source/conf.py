@@ -15,7 +15,7 @@
 import sys
 import os
 
-print "---------pyTikZ help build---------"
+print("---------pyTikZ help build---------")
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -26,7 +26,7 @@ sys.path.insert(0, parent)
 sys.path.insert(0, grand_parent)
 
 sub = os.path.abspath(os.path.join(parent, "pyTikZ"))
-print "*-->*", sub
+print("*-->*", sub)
 sys.path.insert(0, os.path.abspath(sub))
 sys.path.insert(0, os.path.abspath(os.path.join(sub, "plots")))
 
@@ -38,12 +38,12 @@ sys.path.insert(0, os.path.abspath(os.path.join(sub, "plots")))
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+#    'sphinx.ext.pngmath',
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.pngmath',
     'sphinx.ext.doctest',
 ]
 
@@ -55,7 +55,7 @@ autodoc_member_order = 'bysource'
 # Add any paths that contain templates here, relative to this directory.
 templates_path = [r"_templates",]
 html_theme_path = ["_templates\sphinx_rtd_theme", ]
-#html_theme = 'default'
+html_theme = 'default'
 html_theme = "sphinx_rtd_theme"
 #includehidden = True
 

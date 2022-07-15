@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import os, sys
-import bufferlib as objbuff
+import buffer_data.wmclib as objbuff
 
 
 class _data_buff(object):

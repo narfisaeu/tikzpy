@@ -26,11 +26,11 @@ import pickle
 version = '2014-02-18'
 #version = ' ** nrfslib unstable ** '
 
-print ''
-print '================================='
-print 'nrfslib loaded, version',version
-print '================================='
-print ''
+print('')
+print('=================================')
+print('nrfslib loaded, version',version)
+print('=================================')
+print('')
 # change some general settings of matplotlib
 # these changes can be reset with plt.rcdefaults()
 plt.rcdefaults()
@@ -96,10 +96,10 @@ except:
     pass
 
 if not colors_oke :
-    print ''
-    print 'WARNING: something went wrong with the colors.'
-    print '         please update Python(X,Y), matplotlib etc...'
-    print ''
+    print('')
+    print('WARNING: something went wrong with the colors.')
+    print('         please update Python(X,Y), matplotlib etc...')
+    print('')
     nrfs_default_colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
 
 # default markers cycle, used in add_marker
@@ -207,14 +207,14 @@ class nrfs_data(object):
         """
         resize (only for internal use)
         """
-        print '[shrink_to] doet het nog niet'
+        print('[shrink_to] doet het nog niet')
         pass
 
     def add_pnt(self,inPntStep):
         """
         add points (only for internal use)
         """
-        print '[add_pnt] doet het nog niet'
+        print('[add_pnt] doet het nog niet')
         pass
 
     # functions to make nrfs_data act as a dictionary
@@ -236,11 +236,11 @@ class nrfs_data(object):
         '''
         # sanity check is value an array of correct size.....
         if not type(value) == np.ndarray:
-            raise ValueError, 'Only 1D numpy array of correct length ' +\
-                              'can be added to a nrfs_data object'
+            raise(ValueError, 'Only 1D numpy array of correct length ' +\
+                              'can be added to a nrfs_data object')
         if not value.shape == (self.Npnt,):
-            raise ValueError, 'Only 1D numpy array of correct length ' +\
-                              'can be added to a nrfs_data object'
+            raise(ValueError, 'Only 1D numpy array of correct length ' +\
+                              'can be added to a nrfs_data object')
         if (not label in self.chn.keys()):
             #print 'creation of channel \'%s\'' % label
             self.chn[label] = value
@@ -276,14 +276,14 @@ class nrfs_data(object):
         """
         print some information of this nrfs_data object
         """
-        print 'Npnt        : ', self.Npnt
-        print 'Nchn        : ', self.Nchn
-        print 'file_name   : ', self.file_name
-        print 'file_type   : ', self.file_type
-        print 'file_date   : ', self.file_date
-        print 'file_time   : ', self.file_time
-        print 'dumpratio   : ', self.dumpratio
-        print 'station     : ', self.station
+        print('Npnt        : ', self.Npnt)
+        print('Nchn        : ', self.Nchn)
+        print('file_name   : ', self.file_name)
+        print('file_type   : ', self.file_type)
+        print('file_date   : ', self.file_date)
+        print('file_time   : ', self.file_time)
+        print('dumpratio   : ', self.dumpratio)
+        print('station     : ', self.station)
 
     def masked_copy(self,inMask):
         """
@@ -375,7 +375,7 @@ class nrfs_data(object):
             elif self[ch].dtype == np.dtype('bool'):
                 col_format = '%d'
             else:
-                raise ValueError, 'Unknown type'
+                raise(ValueError, 'Unknown type')
             txt_columns.append({'format' : col_format,
                                 'label'  : ch,
                                 'width'  : col_width})
@@ -515,11 +515,11 @@ def load_channels(inFile,inOptions=''):
 
     # check options
     bVerbose     = 'v' in inOptions
-    if (bVerbose): print "[load_channels_set] file:",inFile
+    if (bVerbose): print("[load_channels_set] file:",inFile)
 
     # check if file exists
     if not os.path.isfile(inFile) :
-        raise ValueError, 'channels file ' + inFile + ' does not exist'
+        raise(ValueError, 'channels file ' + inFile + ' does not exist')
 
     channels = {}
     fChn = open(inFile,'r')
@@ -539,7 +539,7 @@ def load_channels(inFile,inOptions=''):
 
     if bVerbose :
         for ch in channels.iteritems() :
-            print '%4d  %10.4e  %10.4e  %-10s ' % ch[1]
+            print('%4d  %10.4e  %10.4e  %-10s ' % ch[1])
 
     return channels
 
@@ -565,16 +565,16 @@ def load_dfx(inFile,inOptions=''):
     bVerbose = 'v' in inOptions
     bVerboseVerbose = 'vv' in inOptions
 
-    if (bVerbose): print "[load_dfx] file:",inFile
+    if (bVerbose): print("[load_dfx] file:",inFile)
 
     # check if file exists and check if sibbling bfgdefs.knl exists
     (dirName, fileName) = os.path.split(inFile)
     chnFile = os.path.join(dirName,'bfgdefs.knl')
 
     if not os.path.isfile(inFile) :
-        raise ValueError, 'data file '+inFile+' does not exist'
+        raise(ValueError, 'data file '+inFile+' does not exist')
     if not os.path.isfile(chnFile):
-        raise ValueError, 'channels file '+chnFile+' does not exist'
+        raise(ValueError, 'channels file '+chnFile+' does not exist')
 
     # create new nrfs_data object
     wd = nrfs_data()
@@ -613,10 +613,10 @@ def load_dfx(inFile,inOptions=''):
     # local callibration factors and offsets
     lcf = np.ones((Nchn,))
     los = np.zeros((Nchn,))
-    print cd
-    print cd.values()
+    print(cd)
+    print(cd.values())
     for c in cd.values():
-        print c
+        print(c)
         if c[0]<Nchn : # bugfix, if there are more channels defined in
                        # bfgdefs.knl than there are in the .dfx file
             lcf[c[0]] = c[1]
@@ -631,13 +631,13 @@ def load_dfx(inFile,inOptions=''):
 
         rec_type = int(struct.unpack('h',s[0:2])[0])
         if bVerboseVerbose:
-            print 'Npnt : %d, rec_type: %d' % (Npnt,rec_type)
+            print('Npnt : %d, rec_type: %d' % (Npnt,rec_type))
 
         if rec_type == 10 :
             # text type, print it
             s = fd.read(114)
-            print '[load_dfx] text type: ',s[8:34]
-            print '[load_dfx] text type: ',s[34:114]
+            print('[load_dfx] text type: ',s[8:34])
+            print('[load_dfx] text type: ',s[34:114])
 
         elif rec_type == 1:
             # callibration factors and offsets
@@ -646,9 +646,9 @@ def load_dfx(inFile,inOptions=''):
                 lcf[i] = float(struct.unpack('f',s[ 8*i  : 8*i+4 ])[0])
                 los[i] = float(struct.unpack('f',s[ 8*i+4: 8*i+8 ])[0])
             if (bVerbose):
-                print "[load_dfx] Calibration factor/offset"
-                print lcf
-                print los
+                print("[load_dfx] Calibration factor/offset")
+                print(lcf)
+                print(los)
 
         elif rec_type == 0 :
             # RNG and AVG
@@ -663,18 +663,18 @@ def load_dfx(inFile,inOptions=''):
                 tmp_data[Npnt,Nchn:2*Nchn] = \
                     struct.unpack('%di'%Nchn,s[8:8+4*Nchn])
                 if bVerboseVerbose:
-                    print tmp_counter[Npnt], tmp_testtime[Npnt]
+                    print(tmp_counter[Npnt], tmp_testtime[Npnt])
                 # apply calfac and offset
                 tmp_data[Npnt,0:Nchn] = tmp_data[Npnt,0:Nchn] * lcf + los
                 tmp_data[Npnt,Nchn:2*Nchn] = tmp_data[Npnt,Nchn:2*Nchn] * lcf
 
                 Npnt += 1
             else:
-                print '[load_dfx] corrupt data at end of .dfx file'
+                print('[load_dfx] corrupt data at end of .dfx file')
 
         elif rec_type == 11 :
             if bVerbose:
-                print 'record_type 11'
+                print('record_type 11')
             s = fd.read(rs-2)
             if len(s) == (rs-2):
                 tmp_counter[Npnt]  = int(struct.unpack('i',s[0:4])[0])
@@ -691,14 +691,14 @@ def load_dfx(inFile,inOptions=''):
                 tmp_data[Npnt,Nchn:2*Nchn] = tmp_data[Npnt,Nchn:2*Nchn] * lcf
 
                 if bVerboseVerbose:
-                    print wd.counter[Npnt],wd.testtime[Npnt]
+                    print(wd.counter[Npnt],wd.testtime[Npnt])
                 Npnt += 1
             else:
-                print '[load_dfx] corrupt data at end of .dfx file'
+                print('[load_dfx] corrupt data at end of .dfx file')
         else :
-            print '=== rec_type ====>', rec_type
-            print '=== Npnt  =======>', Npnt
-            raise ValueError, '[load_dfx] Unknown record type'
+            print('=== rec_type ====>', rec_type)
+            print('=== Npnt  =======>', Npnt)
+            raise(ValueError, '[load_dfx] Unknown record type')
 
     fd.close()
 
@@ -737,16 +737,16 @@ def load_buf(inFile,inOptions=''):
     # check options
     bVerbose = 'v' in inOptions
 
-    if (bVerbose): print "[load_buf] file:",inFile
+    if (bVerbose): print("[load_buf] file:",inFile)
 
     # check if file exists and check if sibbling bfgdefs.knl exists
     (dirName, fileName) = os.path.split(inFile)
     chnFile = os.path.join(dirName,'bfgdefs.knl')
 
     if not os.path.isfile(inFile) :
-        raise ValueError, 'data file '+inFile+' does not exist'
+        raise( ValueError, 'data file '+inFile+' does not exist')
     if not os.path.isfile(chnFile):
-        raise ValueError, 'channels file '+chnFile+' does not exist'
+        raise( ValueError, 'channels file '+chnFile+' does not exist')
 
     # create new nrfs_data object
     wd = nrfs_data()
@@ -830,9 +830,9 @@ def load_buf(inFile,inOptions=''):
                 lcf[i] = float(struct.unpack('f',s[ 8*i  : 8*i+4 ])[0])
                 los[i] = float(struct.unpack('f',s[ 8*i+4: 8*i+8 ])[0])
             if (bVerbose):
-                print "[load_buf] Calibration factor/offset"
-                print lcf
-                print los
+                print( "[load_buf] Calibration factor/offset")
+                print( lcf)
+                print( los)
 
         elif rec_type == 5:
             # time header
@@ -840,7 +840,7 @@ def load_buf(inFile,inOptions=''):
             fd.read(8)
 
         else :
-            print '[load_buf] Unknown record type ('+ str(rec_type) +') in .buf file'
+            print( '[load_buf] Unknown record type ('+ str(rec_type) +') in .buf file')
             #print '=== rec_type ====>', rec_type
             #print '=== Npnt  =======>', Npnt
             #raise ValueError, 'Unknown record type'
@@ -858,13 +858,13 @@ def load_buf(inFile,inOptions=''):
             wd[c[3]] = tmp_data.T[c[0],0:Npnt]
         else :
             bBufferToggleWarning = True
-            print "Error in file: '%s' not in measurement" % (c[3])
+            print( "Error in file: '%s' not in measurement" % (c[3]))
     if bBufferToggleWarning :
-        print '=========================================='
-        print '= WARNING:                               ='
-        print '= BufferToggle in BFG was probably "UIT" ='
-        print '= for some channels                      ='
-        print '=========================================='
+        print( '==========================================')
+        print( '= WARNING:                               =')
+        print( '= BufferToggle in BFG was probably "UIT" =')
+        print( '= for some channels                      =')
+        print( '==========================================')
 
     # everything ok, print message and return nrfs_data object
     print ('%s, Nchn = %d, Npnt = %d' % (inFile,Nchn,Npnt))
@@ -898,15 +898,15 @@ def load_dmp(inFile,inOptions='',**kwargs):
     if 'rr'  in inOptions: Nstep = 100
     if 'rrr' in inOptions: Nstep = 1000
 
-    if (bVerbose): print "[load_dmp] file:",inFile
+    if (bVerbose): print( "[load_dmp] file:",inFile)
 
     # check if file exists and check if sibbling channels.set exists
     (dirName, fileName) = os.path.split(inFile)
     chnFile = os.path.join(dirName,'channels.set')
     if not os.path.isfile(inFile) :
-        raise ValueError, 'data file '+inFile+' does not exist'
+        raise( ValueError, 'data file '+inFile+' does not exist')
     if not os.path.isfile(chnFile):
-        raise ValueError, 'channels file '+ chnFile+' does not exist'
+        raise( ValueError, 'channels file '+ chnFile+' does not exist')
 
     # create new nrfs_data object
     wd = nrfs_data()
@@ -939,7 +939,7 @@ def load_dmp(inFile,inOptions='',**kwargs):
     rs = Nchn*2+4                     # record size
     Npnt = ds/rs           # aantal berekende punten
     if ds%rs != 0 :
-        raise ValueError, 'incorrect file size'
+        raise( ValueError, 'incorrect file size')
 
     # for reduce option
     Npnt = int(Npnt/Nstep)
@@ -982,7 +982,7 @@ def load_dmp(inFile,inOptions='',**kwargs):
             wd[c[3]] = tmp_data.T[c[0],0:Npnt]
 
     # everything ok, print message and return nrfs_data object
-    print ('%s, Nchn = %d, Npnt = %d' % (inFile,Nchn,Npnt))
+    print('%s, Nchn = %d, Npnt = %d' % (inFile,Nchn,Npnt))
     return wd
 
 def load_multiple_dmp(inFile,inOptions='',inStationList=None):
@@ -1009,7 +1009,7 @@ def load_multiple_dmp(inFile,inOptions='',inStationList=None):
         a filled nrfs_data object
     """
     if not 'datax' in inFile:
-        raise ValueError, 'No \'datax\' in inFile'
+        raise( ValueError, 'No \'datax\' in inFile')
 
     bWarn = True
     if inStationList==None:
@@ -1021,7 +1021,7 @@ def load_multiple_dmp(inFile,inOptions='',inStationList=None):
         fn = string.replace(inFile,'datax','data'+str(stat))
         if not os.path.isfile(fn):
             if bWarn:
-                raise ValueError, 'File \''+fn+'\' does not exist'
+                raise( ValueError, 'File \''+fn+'\' does not exist')
         else:
             wd.append(load_dmp(fn,inOptions))
 
@@ -1052,15 +1052,15 @@ def load_dat(inFile,inOptions=''):
     # check options
     bVerbose = 'v' in inOptions
 
-    if (bVerbose): print "[load_dmp] file:",inFile
+    if (bVerbose): print( "[load_dmp] file:",inFile)
 
     # check if file exists and check if sibbling channels.set exists
     (dirName, fileName) = os.path.split(inFile)
     chnFile = os.path.join(dirName,'channels.set')
     if not os.path.isfile(inFile) :
-        raise ValueError, 'data file ' + inFile+' does not exist'
+        raise( ValueError, 'data file ' + inFile+' does not exist')
     if not os.path.isfile(chnFile):
-        raise ValueError, 'channels file '+ chnFile+' does not exist'
+        raise( ValueError, 'channels file '+ chnFile+' does not exist')
 
     # create new nrfs_data object
     wd = nrfs_data()
@@ -1145,7 +1145,7 @@ def load_multiple_dat(inFile,inOptions='',inStationList=None):
                 * 'v' - verbose, print debug info
     """
     if not 'datax' in inFile:
-        raise ValueError, 'No \'datax\' in inFile'
+        raise( ValueError, 'No \'datax\' in inFile')
 
     bWarn = True
     if inStationList==None:
@@ -1157,7 +1157,7 @@ def load_multiple_dat(inFile,inOptions='',inStationList=None):
         fn = string.replace(inFile,'datax','data'+str(stat))
         if not os.path.isfile(fn):
             if bWarn:
-                raise ValueError, 'File \''+fn+'\' does not exist'
+                raise( ValueError, 'File \''+fn+'\' does not exist')
         else:
             wd.append(load_dat(fn,inOptions))
 
@@ -1191,7 +1191,7 @@ def load_st3(inFile,inLoadCase='',inStat=0,inOptions=''):
     bVerbose = 'v' in inOptions
 
     # some init
-    if (bVerbose): print "[load_st3] file:",inFile
+    if (bVerbose): print( "[load_st3] file:",inFile)
     inLoadCase = inLoadCase.lower()
 
     # check if file exists and check if sibbling channels.set exists
@@ -1199,9 +1199,9 @@ def load_st3(inFile,inLoadCase='',inStat=0,inOptions=''):
     chnFile = os.path.join(dirName,'channels.set')
     #print '===>',dirName, fileName, chnFile
     if not os.path.isfile(inFile) :
-        raise ValueError, 'data file '+inFile+' does not exist'
+        raise( ValueError, 'data file '+inFile+' does not exist')
     if not os.path.isfile(chnFile):
-        raise ValueError, 'channels file '+ chnFile+' does not exist'
+        raise( ValueError, 'channels file '+ chnFile+' does not exist')
 
     # create new nrfs_data object
     wd = nrfs_data()
@@ -1292,8 +1292,7 @@ def load_st3(inFile,inLoadCase='',inStat=0,inOptions=''):
 
             tmp_st3_record[Npnt] = int(struct.unpack('h',h[40:42])[0])
             tmp_st3_cycle[Npnt]  = int(struct.unpack('h',h[42:44])[0])
-            tmp_st3_rec_cyc[Npnt]=  long(tmp_st3_record[Npnt]) * 100000L + \
-                                    long(tmp_st3_cycle[Npnt])
+            tmp_st3_rec_cyc[Npnt]=  long(tmp_st3_record[Npnt]) * 100000 + long(tmp_st3_cycle[Npnt])
             tmp_unixtime[Npnt]   = int(struct.unpack('i',h[50:54])[0])
             tmp_st3_100per[Npnt] = int(struct.unpack('i',h[54:58])[0])
             N = int(struct.unpack('h',d[0:2])[0])
@@ -1363,7 +1362,7 @@ def load_multiple_st3(inDirectory,
     bVerbose = 'v' in inOptions
 
     st3_files = []
-    print "load_multiple_st3"
+    print( "load_multiple_st3")
     for dir, subdirs, files in os.walk(inDirectory):
         for file in files:
             filename = os.path.join(dir, file)

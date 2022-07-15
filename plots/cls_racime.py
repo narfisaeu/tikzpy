@@ -11,7 +11,7 @@ import cls_plots
 
 def log(txt):
 
-    print txt
+    print(txt)
 
 class _racime(object):
 

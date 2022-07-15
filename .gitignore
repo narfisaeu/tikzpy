@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 *
 !.gitattributes
 !.gitignore
@@ -10,19 +9,8 @@
 !*.txt
 !*.bs
 !*.rst
+!*.csv
+!*.jpg
+!*.exe
 !*/
-=======
-*
-!.gitattributes
-!.gitignore
-!readme.md
-!.gitkeep
-!*.pxi
-!*.pyx
-!*.py
-!*.txt
-!*.bs
-!*.rst
-!*/
->>>>>>> develop
-xpdftools_bin32/
+!*/xpdftools_bin32/

@@ -31,10 +31,10 @@ for ff in filess:
     actual = os.getcwd()
     os.chdir(ff.folder)
 
-    print "Running ", os.getcwd()
+    print("Running ", os.getcwd())
 
-    order = r"python %s" % ff.file_name
-
+    order = r"py %s" % ff.file_name
+    
     txt = ""
 
     p = os.popen(order)
@@ -49,4 +49,4 @@ for ff in filess:
     f.write(txt) # python will convert \n to os.linesep
     f.close() # you can omit in most cases as the destructor will call if
 
-    print txt
+    print(txt)

@@ -48,28 +48,26 @@ for col in colors:
     p2 = p2.copy()
     p1.y = p1.y + in_y
     p2.y = p2.y + in_y
-    print col
+    print( col)
     l = tikZ.shp.line(p1,p2, thick="5", color="white")
     l.zorder = -1
     l = tikZ.shp.line(p1,p2, thick="5", color=col)
     l.zorder = 1
-    tx = tikZ.shp.text(p2, "color=\"%s\"" % col.replace("_","\_"), layer = 0)    
+    tx = tikZ.shp.text(p2, "color=\"%s\"" % col.replace("_","\_"), layer = 0)
     tx.position = "right"
     tx.zorder = 1
     ii = ii + 1
-    if ii == 18:  
+    if ii == 18:
         p1 = tikZ.pto.alias('pto1').copy()
         p2 = tikZ.pto.alias('pto2').copy()
         p1.x = p1.x + in_x
         p2.x = p2.x + in_x
 
-#Number of colors       
-print "Num colors: %i" % tikZ.col.num_colors
-        
+#Number of colors
+print( "Num colors: %i" % tikZ.col.num_colors)
+
 ### Make drawing
 path = os.path.dirname(os.path.abspath(__file__))
 name = os.path.basename(os.path.abspath(__file__))
 name = os.path.splitext(name)[0]
 tikZ.save_pdf(path, name, as_png = True)
-
-

@@ -40,12 +40,12 @@ for t in line_types:
     p2 = p2.copy()
     p1.y = p1.y + in_y
     p2.y = p2.y + in_y
-    print t
+    print( t)
     l = tikZ.shp.line(p1,p2,type=t)
-    tx = tikZ.shp.text(p2, "type=\"%s\"" % t.replace("_","\_"), layer = 0)    
+    tx = tikZ.shp.text(p2, "type=\"%s\"" % t.replace("_","\_"), layer = 0)
     tx.position = "right"
     ii = ii + 1
-    if ii == 14:  
+    if ii == 14:
         p1 = tikZ.pto.alias('pto1').copy()
         p2 = tikZ.pto.alias('pto2').copy()
         p1.x = p1.x + in_x
@@ -56,5 +56,3 @@ path = os.path.dirname(os.path.abspath(__file__))
 name = os.path.basename(os.path.abspath(__file__))
 name = os.path.splitext(name)[0]
 tikZ.save_pdf(path, name)
-
-

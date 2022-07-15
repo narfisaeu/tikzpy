@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tikzpy"
+version = "0.0.2"
+authors = [
+  { name="flch", email="flch@narfisa.eu" },
+]
+description = "TikZpy simplifies the art of drawing by code tikz figures"
+readme = "README.md"
+license = { file="license.txt" }
+requires-python = ">=3.5"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/narfisaeu/tikzpy.git"
+"Bug Tracker" = "https://github.com/narfisaeu/tikzpy/issues"

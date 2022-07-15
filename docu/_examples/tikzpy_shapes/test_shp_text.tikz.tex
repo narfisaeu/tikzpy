@@ -1,0 +1,40 @@
+\documentclass[convert={density=300,outext=.png}]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,decorations,decorations.pathmorphing,arrows.meta,patterns,decorations.markings}
+
+\begin{document}
+%% Use \usepackage{tikz}
+%% Use \usetikzlibrary{shapes,arrows,decorations, decorations.pathmorphing,arrows.meta,patterns}
+\begin{tikzpicture}[scale=1.0000]
+	\tikzstyle{every node}=[scale=0.7500]
+	
+	%%Created with tikzpy
+	
+	\node [below ,align=center]  at (1.5000,0.0000,0.0000)  {**Position**};
+	\draw [green , fill= green!10 ,]  (0.0000,-1.0000,0.0000) circle [radius=0.1000];
+	\node [above]  at (0.0000,-1.0000,0.0000)  {above};
+	\node [below]  at (0.0000,-1.0000,0.0000)  {below};
+	\node [left]  at (0.0000,-1.0000,0.0000)  {left};
+	\node [right]  at (0.0000,-1.0000,0.0000)  {right};
+	\draw [green , fill= green!10 ,]  (3.0000,-1.0000,0.0000) circle [radius=0.1000];
+	\node [above left]  at (3.0000,-1.0000,0.0000)  {above left};
+	\node [below left]  at (3.0000,-1.0000,0.0000)  {below left};
+	\node [above right]  at (3.0000,-1.0000,0.0000)  {above right};
+	\node [below right]  at (3.0000,-1.0000,0.0000)  {below right};
+	\node [below ,align=center]  at (6.0000,0.0000,0.0000)  {**Align**};
+	\draw [green , fill= green!10 ,]  (6.0000,-1.0000,0.0000) circle [radius=0.1000];
+	\node [right ,align=center]  at (6.0000,-1.0000,0.0000)  {align center};
+	\draw [green , fill= green!10 ,]  (6.0000,-1.5000,0.0000) circle [radius=0.1000];
+	\node [right ,align=right]  at (6.0000,-1.5000,0.0000)  {align right};
+	\draw [green , fill= green!10 ,]  (6.0000,-2.0000,0.0000) circle [radius=0.1000];
+	\node [right ,align=left]  at (6.0000,-2.0000,0.0000)  {align left};
+	\node [below ,align=center]  at (9.0000,0.0000,0.0000)  {**Rotate**};
+	\draw [green , fill= green!10 ,]  (9.0000,-1.0000,0.0000) circle [radius=0.1000];
+	\node [right ,align=center ,rotate=20.000]  at (9.0000,-1.0000,0.0000)  {20$^\circ$ degrees};
+	\draw [green , fill= green!10 ,]  (9.0000,-1.5000,0.0000) circle [radius=0.1000];
+	\node [right ,align=right ,rotate=10.000]  at (9.0000,-1.5000,0.0000)  {10$^\circ$ degrees};
+	\draw [green , fill= green!10 ,]  (9.0000,-2.0000,0.0000) circle [radius=0.1000];
+	\node [right ,align=left ,rotate=-45.000]  at (9.0000,-2.0000,0.0000)  {-45$^\circ$ degrees};
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,26 @@
+solid
+dashed
+dotted
+dashdotted
+dashdotdotted
+densely dashed
+densely dotted
+densely dashdotted
+densely dashdotdotted
+loosely dashed
+loosely dotted
+loosely dashdotted
+loosely dashdotdotted
+zigzag
+random
+saw
+snake
+zigzag_2.1
+random_2.1
+saw_2.1
+snake_2.1
+zigzag_5.1_4.1
+random_5.1_4.1
+saw_5.1_4.1
+snake_5.1_4.1
+tikzpy number points 54, number shapes 52

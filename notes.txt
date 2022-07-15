@@ -1,0 +1,3 @@
+version latest
+
+mklink /D "C:\Python\Lib\site-packages\tikzpy" "G:\My Drive\003_Code\tikzpy\tikzpy\tikzpy"

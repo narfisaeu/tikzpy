@@ -1,0 +1,10 @@
+["['test_shp_fill.tikz.png', 0]"]
+["['test_shp_color.tikz.png', 0]"]
+["['test_shp_fill.tikz.png', 0]", "['test_shp_color.tikz.png', 0]"]
+['G:\\My Drive\\003_Code\\tikzpy\\tikzpy\\docu\\_examples\\tikzpy_shapes']
+G:\My Drive\003_Code\tikzpy\tikzpy\docu\_examples\tikzpy_shapes\test_shp_fill.tikz.png
+G:\My Drive\003_Code\tikzpy\tikzpy\docu\_examples\tikzpy_shapes\test_shp_color.tikz.png
+If the file does not exist will not be add:
+If the file does not exist will not be add:
+[]
+['G:\\My Drive\\003_Code\\tikzpy\\tikzpy\\docu\\_examples\\tikzpy_shapes']

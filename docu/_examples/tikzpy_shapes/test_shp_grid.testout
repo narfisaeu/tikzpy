@@ -1,0 +1,2 @@
+\draw [help lines ,dashdotted ,red ,ystep=2.0000 ,xstep=1.0000]  (0.0000,0.0000,0.0000) grid (20.0000,10.0000,0.0000);
+tikzpy number points 2, number shapes 1

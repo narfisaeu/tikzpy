@@ -1,0 +1,28 @@
+\documentclass[convert={density=300,outext=.png}]{standalone}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{shapes,arrows,decorations,decorations.pathmorphing,arrows.meta,patterns,decorations.markings}
+
+\begin{document}
+%% Use \usepackage{tikz}
+%% Use \usepackage{tikz-3dplot}
+%% Use \usetikzlibrary{shapes,arrows,decorations, decorations.pathmorphing,arrows.meta,patterns}
+\tdplotsetmaincoords{60.00}{120.00}
+\begin{tikzpicture}[scale=1.0000,tdplot_main_coords]
+	\tikzstyle{every node}=[scale=1.0000]
+	
+	%%Created with tikzpy
+	
+	\draw [-> ,thick]  (0.0000,0.0000,0.0000) -- (2.0000,0.0000,0.0000);
+	\node [left]  at (2.0000,0.0000,0.0000)  {X};
+	\draw [-> ,thick]  (0.0000,0.0000,0.0000) -- (0.0000,2.0000,0.0000);
+	\node [right]  at (0.0000,2.0000,0.0000)  {Y};
+	\draw [-> ,thick]  (0.0000,0.0000,0.0000) -- (0.0000,0.0000,2.0000);
+	\node [above]  at (0.0000,0.0000,2.0000)  {Z};
+	\draw [ fill= red ,]  (0.0000,0.0000,0.0000) -- (1.0000,0.0000,0.0000) -- (1.0000,1.0000,0.0000) -- (0.0000,1.0000,0.0000) -- (0.0000,0.0000,0.0000);
+	\draw [ fill= green ,]  (0.0000,0.0000,1.0000) -- (1.0000,0.0000,1.0000) -- (1.0000,1.0000,1.0000) -- (0.0000,1.0000,1.0000) -- (0.0000,0.0000,1.0000);
+	\draw [ fill= green!30 ,]  (0.0000,0.0000,1.0000) -- (0.0000,1.0000,1.0000) -- (0.0000,1.0000,0.0000) -- (0.0000,0.0000,0.0000) -- (0.0000,0.0000,1.0000);
+	\draw [ fill= green!30 ,]  (0.0000,0.0000,1.0000) -- (1.0000,0.0000,1.0000) -- (1.0000,0.0000,0.0000) -- (0.0000,0.0000,0.0000) -- (0.0000,0.0000,1.0000);
+
+\end{tikzpicture}
+\end{document}

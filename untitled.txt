@@ -1,3 +1,0 @@
-version latest
-
-mklink /D "C:\Python\Lib\site-packages\pyTikZ" "G:\My Drive\003_Code\pyTikZ\pyTikZ"

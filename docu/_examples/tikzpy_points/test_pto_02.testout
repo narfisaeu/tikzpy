@@ -1,0 +1,14 @@
+01- Point key:#0 x=0.1000 y=0.2000 z=0.3000 layer=0 alias=pto1 NumPoints:2
+02- Point key:#1 x=1.0000 y=1.0000 z=1.0000 layer=0 alias=pto2 NumPoints:2
+03- Point key:None x=0.9000 y=0.8000 z=0.7000 layer=0 alias= NumPoints:2
+04- Point key:#2 x=0.9000 y=0.8000 z=0.7000 layer=0 alias=vec NumPoints:3
+05- Point key:None x=2.0000 y=2.0000 z=2.0000 layer=0 alias= NumPoints:3
+06- Point key:#1 x=4.0000 y=4.0000 z=4.0000 layer=0 alias=pto2 NumPoints:3
+07- Point key:None x=0.4000 y=0.8000 z=1.2000 layer=0 alias= NumPoints:3
+08- Point key:None x=3.1000 y=3.2000 z=3.3000 layer=0 alias= NumPoints:3
+09- False
+10- True
+11- False
+12- True
+13- Point key:#2 x=0.9000 y=0.8000 z=0.7000 layer=0 alias=vec NumPoints:3
+14- Point key:#0 x=0.1000 y=0.2000 z=0.3000 layer=0 alias=pto1 NumPoints:3

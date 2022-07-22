@@ -59,6 +59,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.doctest',
     'sphinx_rtd_theme',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.todo',
+    'sphinx.ext.autodoc'
 ]
 
 # -- Autodoc

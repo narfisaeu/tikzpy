@@ -7,14 +7,30 @@ Author: flch
 Author-email: flch@narfisa.eu
 License: BSD 3-Clause License
 Keywords: tikz,tikzpy,latex
-Classifier: "Programming Language :: Python :: 3",
-Classifier: "License :: OSI Approved :: MIT License",
-Classifier: "Operating System :: OS Independent",
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
 Description-Content-Type: text/markdown
 License-File: license.txt
 
-# Example Package
+TikZpy package for drawing in TikZ
+==================================
 
-This is a simple example package. You can use
-[Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
-to write your content.
+What Is This?
+-------------
+
+TikZpy simplifies the art of drawing by code tikz figures in eps, png and tikz LaTeX compatible figures using Python
+
+
+How To Use This
+---------------
+
+Install as,
+
+```
+python3 -m pip install tikzpy
+```
+
+More info in [tikzpy.readthedocs.io](https://tikzpy.readthedocs.io)
+
+Requires to install MikTex (miktex.org) or similar LaTeX distribution

@@ -26,12 +26,5 @@ src/tikzpy/plots/__init__.py
 src/tikzpy/plots/cls_arrow_vertical.py
 src/tikzpy/plots/cls_bars_vertical.py
 src/tikzpy/plots/cls_racime.py
-src/tikzpy/xpdftools_bin32/pdfdetach.exe
-src/tikzpy/xpdftools_bin32/pdffonts.exe
-src/tikzpy/xpdftools_bin32/pdfimages.exe
-src/tikzpy/xpdftools_bin32/pdfinfo.exe
-src/tikzpy/xpdftools_bin32/pdftohtml.exe
 src/tikzpy/xpdftools_bin32/pdftopng.exe
-src/tikzpy/xpdftools_bin32/pdftoppm.exe
 src/tikzpy/xpdftools_bin32/pdftops.exe
-src/tikzpy/xpdftools_bin32/pdftotext.exe

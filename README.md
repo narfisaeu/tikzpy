@@ -18,4 +18,17 @@ python3 -m pip install tikzpy
 
 More info in [tikzpy.readthedocs.io](https://tikzpy.readthedocs.io)
 
-Requires to install MikTex (miktex.org) or similar LaTeX distribution
+Requires to install MikTex (miktex.org) or similar LaTeX distribution.
+
+Install Latex in Windows:
+
+* Install MikTex (miktex.org)
+
+Install Latex in Ubuntu:
+
+```
+sudo apt-get install texlive-full
+sudo apt-get install xzdec
+sudo tlmgr install pgf
+sudo tlmgr install tikz-cd
+```

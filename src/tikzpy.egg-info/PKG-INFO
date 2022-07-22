@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: tikzpy
+Version: 0.0.2
+Summary: TikZpy simplifies the art of drawing by code tikz figures
+Home-page: https://github.com/narfisaeu/tikzpy.git
+Author: flch
+Author-email: flch@narfisa.eu
+License: BSD 3-Clause License
+Keywords: tikz,tikzpy,latex
+Classifier: "Programming Language :: Python :: 3",
+Classifier: "License :: OSI Approved :: MIT License",
+Classifier: "Operating System :: OS Independent",
+Description-Content-Type: text/markdown
+License-File: license.txt
+
+# Example Package
+
+This is a simple example package. You can use
+[Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
+to write your content.

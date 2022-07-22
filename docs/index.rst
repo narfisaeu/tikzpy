@@ -96,8 +96,6 @@ Gallery of drawings and pictures performed using **tikzpy**
     Code examples of drawings and pictures carried out using **tikzpy**.
     Contact and send us your drawings based of **tikzpy** if you want them to be included in this section.
 
-    :doc:`Visit the gallery <_00_pytikZ>`
-
 Indices and tables
 ==================
 

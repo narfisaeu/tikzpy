@@ -3,8 +3,8 @@ Name: tikzpy
 Version: 0.0.2
 Summary: TikZpy simplifies the art of drawing by code tikz figures
 Home-page: https://github.com/narfisaeu/tikzpy.git
-Author: flch
-Author-email: flch@narfisa.eu
+Author: narfisaeu
+Author-email: tikzpy@narfisa.eu
 License: BSD 3-Clause License
 Keywords: tikz,tikzpy,latex
 Classifier: Programming Language :: Python :: 3

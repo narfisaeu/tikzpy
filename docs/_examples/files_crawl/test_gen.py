@@ -1,6 +1,6 @@
-#!/usr/bin/python
+# python3
 
-### Load wmcimg library
+### Load library
 import tikzpy.files_crawl as libfile
 
 files = libfile.load_obj_files()

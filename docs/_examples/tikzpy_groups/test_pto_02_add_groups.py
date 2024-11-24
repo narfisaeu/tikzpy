@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 
 ### Load tikzpy library
 import tikzpy as py_tikZ

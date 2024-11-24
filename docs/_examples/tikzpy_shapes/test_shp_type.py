@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 
 ### Load tikzpy library
 import os, sys
@@ -42,7 +42,7 @@ for t in line_types:
     p2.y = p2.y + in_y
     print( t)
     l = tikZ.shp.line(p1,p2,type=t)
-    tx = tikZ.shp.text(p2, "type=\"%s\"" % t.replace("_","\_"), layer = 0)
+    tx = tikZ.shp.text(p2, "type=\"%s\"" % t.replace("_","\\_"), layer = 0)
     tx.position = "right"
     ii = ii + 1
     if ii == 14:

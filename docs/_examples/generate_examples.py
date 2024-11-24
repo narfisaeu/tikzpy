@@ -1,10 +1,12 @@
-#!/usr/bin/python
+# python3
 
-import os, sys
+import os
 
 import tikzpy.files_crawl as libfile
 
+
 llist = []
+
 llist.append("files_crawl")
 llist.append("drawings")
 llist.append("tikzpy")
@@ -16,12 +18,28 @@ llist.append("tikzpy_groups")
 llist.append("tikzpy_colors")
 llist.append("tikzpy_plots")
 
+"""
+llist.append("files_crawl")
+llist.append("drawings")
+llist.append("tikzpy")
+llist.append("tikzpy_assembly")
+llist.append("tikzpy_labels")
+llist.append("tikzpy_points")
+llist.append("tikzpy_shapes")
+llist.append("tikzpy_groups")
+llist.append("tikzpy_colors")
+llist.append("tikzpy_plots")
+"""
+
 filess = libfile.load_obj_files()
 
 ### Find python files
 for f in llist:
 
-    txt = os.path.join(os.path.dirname(os.path.abspath(__file__)),f)
+    txt = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        f
+    )
 
     filess= filess + libfile.read_folder_list_files(txt, "py", prefix = "test", max_recursive_level = 0, data = False, case_sensitive = False)
 
@@ -33,7 +51,7 @@ for ff in filess:
 
     print("Running ", os.getcwd())
 
-    order = r"py %s" % ff.file_name
+    order = r"python %s" % ff.file_name
 
     txt = ""
 

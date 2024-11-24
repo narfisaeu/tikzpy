@@ -1,5 +1,5 @@
 
-#!/usr/bin/python
+# python3
 # FLC 2013
 
 import os, sys, copy

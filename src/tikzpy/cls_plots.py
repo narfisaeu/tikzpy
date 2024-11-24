@@ -1,5 +1,5 @@
 
-#!/usr/bin/python
+# python3
 
 import math
 import numbers

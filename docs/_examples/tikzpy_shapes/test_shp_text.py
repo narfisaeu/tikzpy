@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 
 ### Load tikzpy library
 import os, sys
@@ -45,13 +45,13 @@ txt = tikZ.shp.text(p, "**Rotate**", layer=0, color='', fill='', rotate_text=0, 
 
 p = tikZ.pto.pto(9, -1, 0)
 tikZ.shp.circle(p, 0.1, layer=0, thick='', type='', color='green', fill='green!10')
-txt = tikZ.shp.text(p, "20$^\circ$ degrees", layer=0, color='', fill='', rotate_text=20, position='right', align='center')
+txt = tikZ.shp.text(p, "20$^\\circ$ degrees", layer=0, color='', fill='', rotate_text=20, position='right', align='center')
 p = tikZ.pto.pto(9, -1.5, 0)
 tikZ.shp.circle(p, 0.1, layer=0, thick='', type='', color='green', fill='green!10')
-txt = tikZ.shp.text(p, "10$^\circ$ degrees", layer=0, color='', fill='', rotate_text=10, position='right', align='right')
+txt = tikZ.shp.text(p, "10$^\\circ$ degrees", layer=0, color='', fill='', rotate_text=10, position='right', align='right')
 p = tikZ.pto.pto(9, -2, 0)
 tikZ.shp.circle(p, 0.1, layer=0, thick='', type='', color='green', fill='green!10')
-txt = tikZ.shp.text(p, "-45$^\circ$ degrees", layer=0, color='', fill='', rotate_text=-45, position='right', align='left')
+txt = tikZ.shp.text(p, "-45$^\\circ$ degrees", layer=0, color='', fill='', rotate_text=-45, position='right', align='left')
 
 
 ### Make drawing

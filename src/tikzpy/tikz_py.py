@@ -1,5 +1,5 @@
 
-#!/usr/bin/python
+# python3
 # FLC 2013
 
 import os, sys
@@ -206,7 +206,7 @@ class pytikz(object):
             p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)
             out, err = p.communicate()
         else:
-            subprocess.check_call(lst)
+            out = subprocess.check_call(lst)
 
         ### Create png
         if as_png:
@@ -227,8 +227,9 @@ class pytikz(object):
                     os.rename(route_png+"-000001.png", route_png)
 
             else:
-                lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95",route_png]
-                subprocess.check_call(lst)
+                # check https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
+                lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95", route_png]
+                out = subprocess.check_call(lst)
 
         ### Create eps, pdftops
         if as_eps:
@@ -239,8 +240,10 @@ class pytikz(object):
                 p = subprocess.Popen(lst, stdout=subprocess.PIPE, shell=True)
                 out, err = p.communicate()
             else:
-                lst = ["pdftops", "-eps", "-r 600", route_pdf, route_eps]
-                subprocess.check_call(lst)
+                # check https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
+                # lst = ["pdftops", "-eps", "-r 600", route_pdf, route_eps]
+                lst = ["convert", "-density", "%i" % self.dpi, route_pdf, "-quality", "95", route_eps]
+                out = subprocess.check_call(lst)
 
         return route_pdf
 

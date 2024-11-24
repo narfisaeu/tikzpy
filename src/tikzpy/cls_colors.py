@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 # FLC 2013
 
 class _colors(object):

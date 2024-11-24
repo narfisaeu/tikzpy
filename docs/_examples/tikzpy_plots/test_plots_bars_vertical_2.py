@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 
 ### Load tikzpy library
 import os, sys
@@ -20,7 +20,7 @@ data_buff = tikZ.dbuffer.load_empty_dbuff(N)
 vbar.lbl_axis0 = "axis0"
 data_buff[vbar.lbl_axis0] = np.asarray([15,	43,	35,	7])
 vbar.lbl_label1 = "axis1"
-data_buff[vbar.lbl_label1] = np.asarray(["15\%", "43\%", "35\%", "7\%"])
+data_buff[vbar.lbl_label1] = np.asarray(["15\\%", "43\\%", "35\\%", "7\\%"])
 vbar.lbl_label2 = "axis2"
 data_buff[vbar.lbl_label2] = np.asarray(["","","",""])
 vbar.title = r"\textbf{Alumnos} \\ 10.759.510"
@@ -41,7 +41,7 @@ data_buff = tikZ.dbuffer.load_empty_dbuff(N)
 vbar.lbl_axis0 = "axis0"
 data_buff[vbar.lbl_axis0] = np.asarray([18,	52,	26,	4])
 vbar.lbl_label1 = "axis1"
-data_buff[vbar.lbl_label1] = np.asarray(["18\%", "52\%", "26\%", "4\%"])
+data_buff[vbar.lbl_label1] = np.asarray(["18\\%", "52\\%", "26\\%", "4\\%"])
 vbar.lbl_label2 = "axis2"
 data_buff[vbar.lbl_label2] = np.asarray(["Primario","Inicial","Secundario","Sup. no universitario"])
 vbar.title = r"\textbf{Docentes} \\ 670.579"
@@ -66,7 +66,7 @@ data_buff = tikZ.dbuffer.load_empty_dbuff(N)
 vbar.lbl_axis0 = "axis0"
 data_buff[vbar.lbl_axis0] = np.asarray([33,	41,	22,	4])
 vbar.lbl_label1 = "axis1"
-data_buff[vbar.lbl_label1] = np.asarray(["33\%", "41\%", "22\%", "4\%"])
+data_buff[vbar.lbl_label1] = np.asarray(["33\\%", "41\\%", "22\\%", "4\\%"])
 vbar.lbl_label2 = "axis2"
 data_buff[vbar.lbl_label2] = np.asarray(["","","",""])
 vbar.title = r"\textbf{Unidades educativas} \\ 54.610"

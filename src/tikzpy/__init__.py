@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 # FLC 2013
 
 from tikzpy.tikz_py import load, pytikz

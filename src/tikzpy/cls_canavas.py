@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 # FLC 2014
 
 class _canavas(object):

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 
 ### Load tikzpy library
 import os, sys
@@ -20,7 +20,7 @@ data_buff = tikZ.dbuffer.load_empty_dbuff(N)
 vbar.lbl_axis0 = "axis0"
 data_buff[vbar.lbl_axis0] = np.asarray([15,	43,	35,	7])
 vbar.lbl_label1 = "axis1"
-data_buff[vbar.lbl_label1] = np.asarray(["15\%", "43\%", "35\%", "7\%"])
+data_buff[vbar.lbl_label1] = np.asarray(["15\\%", "43\\%", "35\\%", "7\\%"])
 vbar.lbl_label2 = "axis2"
 data_buff[vbar.lbl_label2] = np.asarray(["Primario","Inicial","Secundario","Sup. no universitario"])
 vbar.title = "\\textbf{Alumnos}"

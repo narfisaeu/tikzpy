@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# python3
 
 ### Load tikzpy library
 import os, sys
@@ -53,7 +53,7 @@ for col in colors:
     l.zorder = -1
     l = tikZ.shp.line(p1,p2, thick="5", color=col)
     l.zorder = 1
-    tx = tikZ.shp.text(p2, "color=\"%s\"" % col.replace("_","\_"), layer = 0)
+    tx = tikZ.shp.text(p2, "color=\"%s\"" % col.replace("_", "\\_"), layer = 0)
     tx.position = "right"
     tx.zorder = 1
     ii = ii + 1

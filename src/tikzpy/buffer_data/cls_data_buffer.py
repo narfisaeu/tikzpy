@@ -1,8 +1,7 @@
-#!/usr/bin/python
+# python3
 
 import os, sys
-import buffer_data.obj_data as objbuff
-
+import tikzpy.buffer_data.obj_data as objbuff
 
 class _data_buff(object):
 

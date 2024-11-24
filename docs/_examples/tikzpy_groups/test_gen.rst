@@ -52,3 +52,20 @@ Drawing created with the following tikzpy code:
 .. literalinclude:: /_examples/tikzpy_groups/test_pto_03_add_groups.py
     :linenos:
     :language: python
+
+Example 4 - Creating Hypocycloids
+---------------------------------
+.. _ex_groups_ex4:
+
+See the following example:
+
+    .. image:: test_pto_04_add_groups.tikz.png
+       :width: 500px
+       :align: center
+
+Drawing created with the following tikzpy code:
+
+.. literalinclude:: /_examples/tikzpy_groups/test_pto_04_add_groups.py
+    :linenos:
+    :language: python
+

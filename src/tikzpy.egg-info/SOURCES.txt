@@ -28,3 +28,4 @@ src/tikzpy/plots/cls_bars_vertical.py
 src/tikzpy/plots/cls_racime.py
 src/tikzpy/xpdftools_bin32/pdftopng.exe
 src/tikzpy/xpdftools_bin32/pdftops.exe
+tests/test_points.py

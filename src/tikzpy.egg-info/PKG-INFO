@@ -12,6 +12,8 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Description-Content-Type: text/markdown
 License-File: license.txt
+Requires-Dist: numpy
+Requires-Dist: matplotlib
 
 TikZpy package for drawing in TikZ
 ==================================
